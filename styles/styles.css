@@ -1,0 +1,211 @@
+:root {
+    --background: rgb(6, 18, 28);
+    --whiteKey: rgb(49, 49, 49);
+    --blackKey: rgb(37, 37, 37);
+    --whiteNote: green;
+    --blackNote: darkgreen;
+    --header: cornflowerblue;
+}
+
+body {
+    color: white;
+    background: var(--background);
+    font-family: arial;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+}
+
+header {
+    background: var(--header);
+    height: 50px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.custom-button,
+input[type="text"] {
+    border: 2px solid black;
+    border-radius: 10%;
+}
+
+.custom-button {
+    color: black;
+    background: white;
+    text-align: center;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    transition: transform 0.1s ease;
+    overflow: hidden;
+}
+
+.custom-button:hover {
+    /* background: gray; */
+    /* color: white; */
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.custom-button:active {
+    /* background: black; */
+    transform: scale(0.9);
+}
+
+#restart img {
+    position: relative;
+    object-fit: cover;
+    bottom: 1.5px;
+    width: 22px;
+    right: 1px;
+}
+
+#play img {
+    position: relative;
+    object-fit: cover;
+    width: 15px;
+    bottom: 5px;
+}
+
+#reset img {
+    position: relative;
+    object-fit: cover;
+    bottom: 4.5px;
+    width: 15px;
+}
+
+input[type="text"] {
+    width: 40px;
+}
+
+#tempo {
+    font-size: 20px;
+    text-align: center;
+}
+
+#opti-midi {
+    position: absolute;
+    font-weight: bold;
+    font-size: 25px;
+    left: 20px;
+}
+
+#michael-pyrdol {
+    position: absolute;
+    left: 220px;
+    bottom: 13px;
+    font-size: 13px;
+}
+
+#gridContainer {
+    display: flex;
+}
+
+#grid,
+#piano {
+    margin-left: 2%;
+    bottom: 0;
+    position: relative;
+    width: 98%;
+}
+
+td {
+    width: 1%;
+}
+
+#custom-context-menu {
+    position: absolute;
+    display: none;
+    color: black;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#custom-context-menu .menu-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#custom-context-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 50%;
+}
+
+#custom-context-menu li {
+    padding: 10px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#custom-context-menu li:hover {
+    background-color: #f0f0f5;
+}
+
+#custom-context-menu hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 4px 0;
+}
+
+.note {
+    cursor: pointer;
+}
+
+#piano td {
+    background: white;
+}
+
+.black.topKey {
+    background: black !important;
+    ;
+}
+
+.topKey {
+    height: 80px !important;
+}
+
+.bottomKey {
+    height: 40px !important;
+    position: relative;
+}
+
+.black.bottomKey::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: black !important;
+    transform: translateX(-50%);
+}
+
+.whiteLeft {
+    border-right: 1px solid black;
+}
+
+.bFlat::before {
+    left: 30% !important;
+}
+
+.cSharp::before {
+    left: 65% !important;
+}
+
+.dSharp::before {
+    left: 35% !important;
+}
+
+.fSharp::before {
+    left: 70% !important;
+}

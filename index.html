@@ -1,24 +1,56 @@
 <!DOCTYPE html>
 
 <head>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="shortcut icon" href="#">
+  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/keys.css">
+  <link rel="shortcut icon" href="#">
+  <title>Opti-MIDI</title>
 </head>
 
 <body>
-    <!-- <audio id="cardflip" src="sfx/cardflip.wav"></audio> -->
-    <header>
-        <div id="reset" class="custom-button" onclick="reset()">Reset</div>
-        <div id="playPause" class="custom-button" onclick="playPause()">Play/Pause</div>
-    </header>
-    <div id="gridContainer">
-        <table id="grid" cellspacing='0'></table>
+  <div id="custom-context-menu">
+    <div class="menu-row">
+      <ul>
+        <li id="menu-item-1">1/64</li>
+        <li id="menu-item-2">1/32</li>
+        <li id="menu-item-3">1/16</li>
+        <li id="menu-item-4">1/8</li>
+        <li id="menu-item-4">1/4</li>
+        <li id="menu-item-4">1/2</li>
+        <li id="menu-item-4">1</li>
+      </ul>
+      <ul>
+        <li id="menu-item-1">pp</li>
+        <li id="menu-item-2">p</li>
+        <li id="menu-item-3">mp</li>
+        <li id="menu-item-4">mf</li>
+        <li id="menu-item-4">f</li>
+        <li id="menu-item-4">ff</li>
+        <li id="menu-item-4">fff</li>
+      </ul>
     </div>
-    <div id="audioBox"></div>
-    <footer>
-    </footer>
-    <script src="constants.js"></script>
-    <script src="scripts.js"></script>
+  </div>
+  <header>
+    <div id="opti-midi">Opti-MIDI alpha</div>
+    <div id="michael-pyrdol">by Michael Pyrdol</div>
+    <div id="restart" class="custom-button" onclick="restart()"><img src="images/restart.png"></div>
+    <div id="play" class="custom-button" onclick="playPause()"><img src="images/play.png"></div>
+    <div id="reset" class="custom-button" onclick="reset()"><img src="images/stop.png"></div>
+    <p>Tempo</p>
+    <input id="tempo" type="text" onchange="changeTempo()"></input>
+  </header>
+  <div id="gridContainer">
+    <table id="grid" cellspacing='0'></table>
+  </div>
+  <table id="piano" cellspacing='0'></table>
+  <div id="audioBox"></div>
+  <footer>
+  </footer>
+  <script src="constants.js"></script>
+  <script src="creation.js"></script>
+  <script src="scripts.js"></script>
+  <script src="playback.js"></script>
+  <script src="main.js"></script>
 </body>
 
 </html>
