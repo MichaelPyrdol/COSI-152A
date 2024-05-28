@@ -3,12 +3,18 @@ A simple piano sequencer created entirely with a JavaScript table.
 
 No external libraries were used. Just raw HTML, CSS, and JS!
 
+## Controls
+-Place/select notes with click\
+-Move notes by clicking and holding or using arrow keys on selected note\
+-Play/pause with spacebar
+
 ## Supported features
 -Placing quarter notes\
--Moving notes with mouse drag and arrow keys\
+-Moving individual notes\
 -Playback (restart, play, reset)\
 -Tempo adjust
 
 ## Planned features
   -Different note durations\
-  -Keys lighting up
+  -Keys lighting up\
+  -Selecting and moving multiple notes
