@@ -15,6 +15,5 @@ No external libraries were used. Just raw HTML, CSS, and JS!
 -Tempo adjust
 
 ## Planned features
-  -Different note durations\
-  -Keys lighting up\
-  -Selecting and moving multiple notes
+-Different note durations\
+-Selecting and moving multiple notes
