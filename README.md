@@ -1,7 +1,7 @@
 # Opti-MIDI
-A simple piano sequencer created entirely with a JavaScript table.
+A simple piano sequencer created entirely with JavaScript tables.
 
-No external libraries were used. Just raw HTML, CSS, and JS!
+No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Controls
 -Place/select notes with click\
