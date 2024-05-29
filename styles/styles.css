@@ -2,8 +2,10 @@
     --background: rgb(6, 18, 28);
     --whiteKey: rgb(49, 49, 49);
     --blackKey: rgb(37, 37, 37);
-    --whiteNote: green;
+    --whiteNote: limegreen;
     --blackNote: darkgreen;
+    --whiteKeyPlay: limegreen;
+    --blackKeyPlay: darkgreen;
     --header: cornflowerblue;
 }
 
@@ -159,53 +161,4 @@ td {
 
 .note {
     cursor: pointer;
-}
-
-#piano td {
-    background: white;
-}
-
-.black.topKey {
-    background: black !important;
-    ;
-}
-
-.topKey {
-    height: 80px !important;
-}
-
-.bottomKey {
-    height: 40px !important;
-    position: relative;
-}
-
-.black.bottomKey::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background-color: black !important;
-    transform: translateX(-50%);
-}
-
-.whiteLeft {
-    border-right: 1px solid black;
-}
-
-.bFlat::before {
-    left: 30% !important;
-}
-
-.cSharp::before {
-    left: 65% !important;
-}
-
-.dSharp::before {
-    left: 35% !important;
-}
-
-.fSharp::before {
-    left: 70% !important;
 }

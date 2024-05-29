@@ -4,7 +4,7 @@
 function prepareAudio() {
     var isSafari = window.safari !== undefined;
     if (isSafari) {
-        alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. Sorry for the inconvenience. Please try another browser.");
+        alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. We apologize for the inconvenience. Please try another browser.<br><br>-Michael");
     }else{
         audioBox = document.getElementById("audioBox");
         let output = "";

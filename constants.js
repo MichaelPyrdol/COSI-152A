@@ -36,6 +36,8 @@ let noteSnapshot=[];
 let parentSnapshot=[];
 let markerSnapshot=[];
 
+let activeKeys=[];
+
 let mouseDown=false;
 
 // document.addEventListener('DOMContentLoaded', function() {

@@ -11,19 +11,23 @@
 }
 
 [data-parent].white {
-    background: linear-gradient(to right, var(--whiteKey) 10%, var(--whiteNote) 10%, var(--whiteNote) 90%, var(--whiteKey) 90%);
+    /* background: linear-gradient(to right, var(--whiteKey) 10%, var(--whiteNote) 10%, var(--whiteNote) 90%, var(--whiteKey) 90%); */
+    background: var(--whiteNote);
 }
 
 [data-parent].black {
-    background: linear-gradient(to right, var(--blackKey) 10%, var(--blackNote) 10%, var(--blackNote) 90%, var(--blackKey) 90%);
+    /* background: linear-gradient(to right, var(--blackKey) 10%, var(--blackNote) 10%, var(--blackNote) 90%, var(--blackKey) 90%); */
+    background: var(--blackNote);
 }
 
 .selected.white {
-    background: linear-gradient(to right, var(--whiteKey) 10%, var(--header) 10%, var(--header) 90%, var(--whiteKey) 90%);
+    /* background: linear-gradient(to right, var(--whiteKey) 10%, var(--header) 10%, var(--header) 90%, var(--whiteKey) 90%); */
+    background: var(--header);
 }
 
 .selected.black {
-    background: linear-gradient(to right, var(--blackKey) 10%, var(--header) 10%, var(--header) 90%, var(--blackKey) 90%);
+    /* background: linear-gradient(to right, var(--blackKey) 10%, var(--header) 10%, var(--header) 90%, var(--blackKey) 90%); */
+    background: var(--header);
 }
 
 .note.noteHit {
@@ -51,6 +55,99 @@
     position: absolute;
     transform: translate(-20px, -9px);
 }
-.markerContainer{
+
+.markerContainer {
     box-shadow: 0 1px 0 white;
+}
+
+.white.topKey {
+    background: white;
+}
+
+.black.topKey {
+    background: black;
+}
+
+.whiteKeyPlay {
+    background: var(--whiteKeyPlay) !important;
+}
+
+.blackKeyPlay {
+    background: var(--blackKeyPlay) !important;
+}
+#piano{
+    background:white;
+    border-top:1px solid black;
+}
+
+.cPlay{
+    background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 65%, transparent 65%, transparent 100%) !important;
+}
+.dPlay1{
+    background: linear-gradient(to right, transparent 0%, transparent 65%, var(--whiteKeyPlay) 65%, var(--whiteKeyPlay) 100%) !important;
+}
+.dPlay2{
+    background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 35%, transparent 35%, transparent 100%) !important;
+}
+.ePlay{
+    background: linear-gradient(to right, transparent 0%, transparent 35%, var(--whiteKeyPlay) 35%, var(--whiteKeyPlay) 100%) !important;
+}
+.fPlay{
+    background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 70%, transparent 70%, transparent 100%) !important;
+}
+.gPlay1{
+    background: linear-gradient(to right, transparent 0%, transparent 70%, var(--whiteKeyPlay) 70%, var(--whiteKeyPlay) 100%) !important;
+}
+.gPlay2{
+    background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 50%, transparent 50%, transparent 100%) !important;
+}
+.aPlay1{
+    background: linear-gradient(to right, transparent 0%, transparent 50%, var(--whiteKeyPlay) 50%, var(--whiteKeyPlay) 100%) !important;
+}
+.aPlay2{
+    background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 30%, transparent 30%, transparent 100%) !important;
+}
+.bPlay{
+    background: linear-gradient(to right, transparent 0%, transparent 30%, var(--whiteKeyPlay) 30%, var(--whiteKeyPlay) 100%) !important;
+}
+
+.topKey {
+    height: 80px !important;
+}
+
+.bottomKey {
+    background: white;
+    height: 40px !important;
+    position: relative;
+}
+
+.black.bottomKey::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: black !important;
+    transform: translateX(-50%);
+}
+
+.whiteLeft {
+    border-right: 1px solid black;
+}
+
+.bFlat::before {
+    left: 30% !important;
+}
+
+.cSharp::before {
+    left: 65% !important;
+}
+
+.dSharp::before {
+    left: 35% !important;
+}
+
+.fSharp::before {
+    left: 70% !important;
 }
