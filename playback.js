@@ -1,12 +1,15 @@
 const timeouts = [];
 let paused = true;
 let fromBeginning = true;
+let play=document.getElementById("play");
 function playPause() {
     if (paused) {
         paused = false;
+        play.innerHTML="<img src='images/pause.png'>"
         if (fromBeginning) {
             fromBeginning = false;
             invisible();
+            unhover();
             noteRows.forEach(row => {
                 noteSnapshot.push(row);
                 parentSnapshot.push(row.dataset.parent);
@@ -21,29 +24,11 @@ function playPause() {
         selectRows = [];
         for (let i = numRows; i >= 0; i--) {
             let play = setTimeout(function () {
-                activeKeys.forEach(key => {
-                    key.classList.remove("blackKeyPlay");
-                    key.classList.remove("whiteKeyPlay");
-                    key.classList.remove("cPlay");
-                    key.classList.remove("dPlay1");
-                    key.classList.remove("dPlay2");
-                    key.classList.remove("ePlay");
-                    key.classList.remove("fPlay");
-                    key.classList.remove("gPlay1");
-                    key.classList.remove("gPlay2");
-                    key.classList.remove("aPlay1");
-                    key.classList.remove("aPlay2");
-                    key.classList.remove("bPlay");
-                })
-                activeKeys = [];
+                refreshKeys();
                 // Note movement
                 noteRows.forEach(cell => {
+                    // Note sound
                     if (cell.dataset.parent.split("-")[0] == numRows) {
-                        // noteRows.forEach(noteRow => {
-                        //     if (noteRow.dataset.parent == cell.id) {
-                        //         noteRow.classList.add("noteHit");
-                        //     }
-                        // })
                         playSound(cell.id.split("-")[1]);
                     }
                     let row = parseInt(cell.id.split("-")[0]);
@@ -84,6 +69,9 @@ function playPause() {
                         markerRows = markerRows.filter(element => element != cell);
                     }
                 })
+                if(i==0&&repeating){
+                    restart();
+                }
             }, delay * (numRows - i), i);
             timeouts.push(play);
         }
@@ -93,6 +81,7 @@ function playPause() {
 }
 function stop() {
     paused = true;
+    play.innerHTML="<img src='images/play.png'>"
     timeouts.forEach(timeout => clearTimeout(timeout));
 }
 function reset() {
@@ -100,11 +89,11 @@ function reset() {
         fromBeginning = true;
         stop();
         visible();
+        refreshKeys();
         noteRows.forEach(row => {
             row.removeAttribute("data-parent");
             row.classList.remove("note");
             row.classList.remove("selected");
-            // row.classList.remove("noteHit");
         })
         noteRows = [];
         noteSnapshot.forEach(row => {
@@ -127,6 +116,15 @@ function reset() {
 function restart() {
     reset();
     playPause();
+}
+function repeat(){
+    let repeat=document.getElementById("repeat");
+    repeat.classList.toggle("pressed");
+    if(repeating){
+        repeating=false;
+    }else{
+        repeating=true;
+    }
 }
 function invisible() {
     for (let i = 1; i <= numRows; i++) {
@@ -157,7 +155,7 @@ function playKey(key) {
         if (whichKey % 12 == 4) {
             let cSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
             if (cSharp != undefined) {
-                oneKey(cSharp,"dPlay1","cPlay");
+                oneKey(cSharp, "dPlay1", "cPlay");
             }
         } else if (whichKey % 12 == 6) {
             let cSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
@@ -165,10 +163,10 @@ function playKey(key) {
             twoKeys(cSharp, dSharp, "cPlay", "dPlay", "ePlay");
         } else if (whichKey % 12 == 8) {
             let dSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            oneKey(dSharp,"dPlay2","ePlay");
+            oneKey(dSharp, "dPlay2", "ePlay");
         } else if (whichKey % 12 == 9) {
             let fSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            oneKey(fSharp,"gPlay1","fPlay");
+            oneKey(fSharp, "gPlay1", "fPlay");
         } else if (whichKey % 12 == 11) {
             let fSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
             let gSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
@@ -179,11 +177,11 @@ function playKey(key) {
             twoKeys(fSharp, gSharp, "gPlay2", "aPlay", "bPlay");
         } else if (whichKey % 12 == 3) {
             let bFlat = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            oneKey(bFlat,"aPlay2","bPlay");
+            oneKey(bFlat, "aPlay2", "bPlay");
         }
     }
 }
-function oneKey(key,key1name,key2name){
+function oneKey(key, key1name, key2name) {
     if (key.classList.contains(key1name)) {
         key.classList.remove(key1name);
         key.classList.add("whiteKeyPlay");
@@ -193,12 +191,14 @@ function oneKey(key,key1name,key2name){
     }
 }
 function twoKeys(key1, key2, key1name, key2name, key3name) {
-    if (key1.classList.contains(key1name)) {
-        key1.classList.remove(key1name);
-        key1.classList.add("whiteKeyPlay");
-    } else {
-        key1.classList.add(key2name + 1);
-        activeKeys.push(key1);
+    if (key1 != undefined) {
+        if (key1.classList.contains(key1name)) {
+            key1.classList.remove(key1name);
+            key1.classList.add("whiteKeyPlay");
+        } else {
+            key1.classList.add(key2name + 1);
+            activeKeys.push(key1);
+        }
     }
     if (key2.classList.contains(key3name)) {
         key2.classList.remove(key3name);
@@ -206,5 +206,19 @@ function twoKeys(key1, key2, key1name, key2name, key3name) {
     } else {
         key2.classList.add(key2name + 2);
         activeKeys.push(key2);
+    }
+}
+function refreshKeys() {
+    activeKeys.forEach(key => {
+        keyClasses = ["blackKeyPlay", "whiteKeyPlay", "cPlay", "dPlay1", "dPlay2", "ePlay", "fPlay", "gPlay1", "gPlay2", "aPlay1", "aPlay2", "bPlay"]
+        keyClasses.forEach(classy => {
+            key.classList.remove(classy);
+        });
+    })
+    activeKeys = [];
+}
+function highlightKey(key){
+    if(paused){
+        playKey(key);
     }
 }

@@ -2,6 +2,7 @@
 
 <head>
   <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/grid.css">
   <link rel="stylesheet" href="styles/keys.css">
   <link rel="shortcut icon" href="#">
   <title>Opti-MIDI</title>
@@ -31,13 +32,20 @@
     </div>
   </div>
   <header>
-    <div id="opti-midi">Opti-MIDI alpha</div>
-    <div id="michael-pyrdol">by Michael Pyrdol</div>
-    <div id="restart" class="custom-button" onclick="restart()"><img src="images/restart.png"></div>
-    <div id="play" class="custom-button" onclick="playPause()"><img src="images/play.png"></div>
-    <div id="reset" class="custom-button" onclick="reset()"><img src="images/stop.png"></div>
-    <p>Tempo</p>
-    <input id="tempo" type="text" onchange="changeTempo()"></input>
+    <div id="titles">
+      <div id="opti-midi">Opti-MIDI alpha</div>
+      <div id="michael-pyrdol">by Michael Pyrdol</div>
+    </div>
+    <div id="controls">
+      <div id="restart" class="custom-button square" onclick="restart()"><img src="images/restart.png"></div>
+      <div id="play" class="custom-button square" onclick="playPause()"><img src="images/play.png"></div>
+      <div id="reset" class="custom-button square" onclick="reset()"><img src="images/stop.png"></div>
+      <div id="repeat" class="custom-button square" onclick="repeat()"><img src="images/repeat.png"></div>
+      <p>Tempo</p>
+      <input id="tempoBox" type="text" onchange="changeTempo('box')" value="120"></input>
+      <input id="tempoSlider" type="range" oninput="changeTempo('slider')" onchange="finishSlide()" min="1" max="400" value="120">
+      <div id="clear" class="custom-button" onclick="clearNotes()">Clear notes</div>
+    </div>
   </header>
   <div id="gridContainer">
     <table id="grid" cellspacing='0'></table>
@@ -49,6 +57,7 @@
   <script src="constants.js"></script>
   <script src="creation.js"></script>
   <script src="scripts.js"></script>
+  <script src="editor.js"></script>
   <script src="playback.js"></script>
   <script src="main.js"></script>
 </body>

@@ -22,10 +22,50 @@ header {
     background: var(--header);
     height: 50px;
     display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
     position: relative;
+}
+
+#titles {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    margin-left: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#opti-midi {
+    font-weight: bold;
+    font-size: 25px;
+}
+
+#michael-pyrdol {
+    font-size: 13px;
+}
+
+#controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+    margin-left: 43%;
+}
+
+.custom-button {
+    color: black;
+    background: white;
+    text-align: center;
+    padding: 5px;
+    position: relative;
+    transition: transform 0.1s ease;
+    overflow: hidden;
+}
+
+.custom-button:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .custom-button,
@@ -34,73 +74,56 @@ input[type="text"] {
     border-radius: 10%;
 }
 
-.custom-button {
-    color: black;
-    background: white;
-    text-align: center;
-    padding: 5px;
+.square {
     width: 20px;
     height: 20px;
+}
+
+.custom-button:active,
+.pressed {
+    transform: scale(0.95);
+}
+
+.custom-button img {
     position: relative;
-    transition: transform 0.1s ease;
-    overflow: hidden;
-}
-
-.custom-button:hover {
-    /* background: gray; */
-    /* color: white; */
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
-.custom-button:active {
-    /* background: black; */
-    transform: scale(0.9);
+    object-fit: cover;
 }
 
 #restart img {
-    position: relative;
-    object-fit: cover;
     bottom: 1.5px;
     width: 22px;
     right: 1px;
 }
 
 #play img {
-    position: relative;
-    object-fit: cover;
     width: 15px;
     bottom: 5px;
 }
 
 #reset img {
-    position: relative;
-    object-fit: cover;
     bottom: 4.5px;
     width: 15px;
+}
+
+#repeat {
+    width: 10px;
+}
+.pressed{
+    background: var(--whiteNote);
+}
+
+#repeat img {
+    width: 20px;
+    right: 5.5px;
 }
 
 input[type="text"] {
     width: 40px;
 }
 
-#tempo {
+#tempoBox {
     font-size: 20px;
     text-align: center;
-}
-
-#opti-midi {
-    position: absolute;
-    font-weight: bold;
-    font-size: 25px;
-    left: 20px;
-}
-
-#michael-pyrdol {
-    position: absolute;
-    left: 220px;
-    bottom: 13px;
-    font-size: 13px;
 }
 
 #gridContainer {
@@ -129,6 +152,7 @@ td {
     border: 1px solid rgba(0, 0, 0, 0.1);
     z-index: 1000;
     overflow: hidden;
+    border:2px solid black;
 }
 
 #custom-context-menu .menu-row {
@@ -157,8 +181,4 @@ td {
     border: none;
     border-top: 1px solid #e0e0e0;
     margin: 4px 0;
-}
-
-.note {
-    cursor: pointer;
 }

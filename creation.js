@@ -5,16 +5,16 @@ function prepareAudio() {
     var isSafari = window.safari !== undefined;
     if (isSafari) {
         alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. We apologize for the inconvenience. Please try another browser.<br><br>-Michael");
-    }else{
+    } else {
         audioBox = document.getElementById("audioBox");
         let output = "";
         for (let i = 1; i <= 88; i++) {
-            output += "<audio id='note_" + i + "' src='sfx/" + i + ".mp3' preload='metadata'></audio>"
+            output += "<audio id='note_" + i + "' src='sfx/" + i + ".ogg'></audio>"
         }
         audioBox.innerHTML = output;
         for (let i = 1; i <= 88; i++) {
             notey[i] = document.getElementById("note_" + i);
-            notey[i].volume = 0.1;
+            notey[i].volume = 0.2;
         }
     }
 }
@@ -22,13 +22,25 @@ function populate() {
     let grid = document.getElementById("grid");
     grid.innerHTML = createGrid();
     piano.innerHTML = createPiano();
-    let tempoBox = document.getElementById("tempo");
-    tempoBox.value = tempo;
     for (let j = 1; j <= 88; j++) {
         let topKey = document.getElementById(numRows + 1 + "-" + j);
         topKey.classList.add("topKey");
+        topKey.addEventListener("mouseover", function () {
+            highlightKey(topKey);
+        });
+        topKey.addEventListener("mouseleave", function () {
+            refreshKeys();
+        });
         let bottomKey = document.getElementById(numRows + 2 + "-" + j);
         bottomKey.classList.add("bottomKey");
+        if (bottomKey.classList.contains("white")) {
+            bottomKey.addEventListener("mouseover", function () {
+                highlightKey(topKey);
+            });
+            bottomKey.addEventListener("mouseleave", function () {
+                refreshKeys();
+            });
+        }
     }
     for (let i = 1; i <= numRows + 2; i++) {
         for (let j = 3; j < 88; j += 12) {
@@ -123,6 +135,13 @@ function octave(i, j) {
     return output;
 }
 function note(i, j, color) {
-    let output = `<td id="${i}-${j}" class='${color}' onmouseover="hover(${i},${j})" onclick="processNote(${i},${j});" style="height:${rowHeight}px"></td>`
+    let output = `<td
+        id="${i}-${j}"
+        class='${color}'
+        onmouseover="hover(${i},${j})"
+        onmouseleave="unhover()"
+        onclick="processNote(${i},${j});"
+        style="height:${rowHeight}px">
+        </td>`
     return output;
 }

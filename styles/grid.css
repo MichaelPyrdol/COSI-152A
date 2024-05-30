@@ -1,0 +1,57 @@
+.note {
+    cursor: pointer;
+}
+
+.white {
+    background: var(--whiteKey);
+}
+
+.black {
+    background: var(--blackKey);
+}
+
+.hover {
+    background: lightgreen !important;
+}
+
+[data-parent].white {
+    background: var(--whiteNote);
+}
+
+[data-parent].black {
+    background: var(--blackNote);
+}
+
+.selected.white {
+    background: var(--header);
+}
+
+.selected.black {
+    background: var(--header);
+}
+
+.beatTick {
+    position: relative;
+    box-shadow: 0 1px 0 grey;
+}
+
+.measureTick {
+    position: relative;
+    box-shadow: 0 1px 0 white;
+}
+
+.off {
+    background: transparent;
+    border-bottom: none;
+    box-shadow: none;
+    color: transparent;
+}
+
+.marker {
+    position: absolute;
+    transform: translate(-20px, -9px);
+}
+
+.markerContainer {
+    box-shadow: 0 1px 0 white;
+}
