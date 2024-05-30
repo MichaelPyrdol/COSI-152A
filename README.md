@@ -17,7 +17,11 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Planned features
 -Different note durations\
--Selecting and moving multiple notes
+-Selecting and moving multiple notes\
+-Context menu
 
 ## Known bugs
--Repeat is functional but buggy when tempo is changed mid-playback
+-Repeat is functional but buggy\
+-Notes will override other notes when moved with arrow keys\
+-Beat/measure marker lines are invisible at 1 beat per row\
+-Notes longer than 1 beat cannot be moved up/down with the arrow keys
