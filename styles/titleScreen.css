@@ -1,0 +1,63 @@
+#titleScreen {
+    text-align: center;
+    display:flex;
+    margin-top:170px;
+    align-items: center;
+    justify-content: center;
+}
+
+#intro{
+    width:50%;
+    height:80px;
+    margin-left:50px;
+}
+
+#titleControls {
+    width: 40%;
+    height:80px;
+    background-color: grey;
+    margin-left:50px;
+    margin-top:50px;
+}
+
+#titleControls td:first-child {
+    width:1%;
+    text-align: right;
+}
+
+#titleControls td:last-child {
+    width: 1px;
+    text-align: left;
+}
+#titleControls input[type="range"]{
+    display: block;
+    margin: 0 auto;
+    width:90%;
+}
+
+#rowsPerBeat {
+    width: 30px;
+}
+
+#gridPreview td,
+#pianoPreview td {
+    width: .1%;
+}
+#preview{
+    width:15%;
+    margin-right:auto;
+    position:absolute;
+    margin-left:30%;
+    bottom:0;
+}
+#previewContainer{
+}
+
+#controlsAndPreview{
+    display:flex;
+    width:60%;
+    height:200px;
+}
+h1{
+    font-size:50px;
+}

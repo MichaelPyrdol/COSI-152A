@@ -2,6 +2,8 @@
 
 <head>
   <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/titleScreen.css">
+  <link rel="stylesheet" href="styles/header.css">
   <link rel="stylesheet" href="styles/grid.css">
   <link rel="stylesheet" href="styles/keys.css">
   <link rel="shortcut icon" href="#">
@@ -12,15 +14,15 @@
   <div id="custom-context-menu">
     <div class="menu-row">
       <ul>
-        <li id="menu-item-1">1/64</li>
-        <li id="menu-item-2">1/32</li>
-        <li id="menu-item-3">1/16</li>
-        <li id="menu-item-4">1/8</li>
-        <li id="menu-item-4">1/4</li>
-        <li id="menu-item-4">1/2</li>
-        <li id="menu-item-4">1</li>
+        <li id="menu-item-4" onclick="changeNoteDuration(4)">1</li>
+        <li id="menu-item-4" onclick="changeNoteDuration(2)">1/2</li>
+        <li id="menu-item-4" onclick="changeNoteDuration(1)">1/4</li>
+        <li id="menu-item-4" onclick="changeNoteDuration(.5)">1/8</li>
+        <li id="menu-item-3" onclick="changeNoteDuration(.25)">1/16</li>
+        <li id="menu-item-2" onclick="changeNoteDuration(.125)">1/32</li>
+        <li id="menu-item-1" onclick="changeNoteDuration(.0625)">1/64</li>
       </ul>
-      <ul>
+      <!-- <ul>
         <li id="menu-item-1">pp</li>
         <li id="menu-item-2">p</li>
         <li id="menu-item-3">mp</li>
@@ -28,29 +30,87 @@
         <li id="menu-item-4">f</li>
         <li id="menu-item-4">ff</li>
         <li id="menu-item-4">fff</li>
-      </ul>
+      </ul> -->
     </div>
   </div>
   <header>
     <div id="titles">
       <div id="opti-midi">Opti-MIDI alpha</div>
-      <div id="michael-pyrdol">by Michael Pyrdol</div>
+      <div id="michael-pyrdol">by Michael Pyrdol 2024</div>
     </div>
     <div id="controls">
       <div id="restart" class="custom-button square" onclick="restart()"><img src="images/restart.png"></div>
       <div id="play" class="custom-button square" onclick="playPause()"><img src="images/play.png"></div>
       <div id="reset" class="custom-button square" onclick="reset()"><img src="images/stop.png"></div>
       <div id="repeat" class="custom-button square" onclick="repeat()"><img src="images/repeat.png"></div>
-      <p>Tempo</p>
       <input id="tempoBox" type="text" onchange="changeTempo('box')" value="120"></input>
-      <input id="tempoSlider" type="range" oninput="changeTempo('slider')" onchange="finishSlide()" min="1" max="400" value="120">
+      <div id="tempoDiv">
+        <p>Tempo</p>
+        <input id="tempoSlider" type="range" oninput="changeTempo('slider')" onchange="finishSlide()" min="1" max="400"
+          value="120">
+      </div>
       <div id="clear" class="custom-button" onclick="clearNotes()">Clear notes</div>
     </div>
   </header>
   <div id="gridContainer">
-    <table id="grid" cellspacing='0'></table>
+    <table id="grid" class="hide" cellspacing='0'></table>
   </div>
   <table id="piano" cellspacing='0'></table>
+  <div id="titleScreen">
+    <div id="intro">
+      <h1>Opti-MIDI<h1>
+          <h2>A web-based, open-source piano sequencer</h2>
+    </div>
+    <div id="controlsAndPreview">
+      <table id="titleControls">
+        <tr>
+          <th colspan="2">Settings</th>
+        </tr>
+        <tr>
+          <td><input id="unitsPerRowBox" type="text" value="3" onchange="updateGridPreview('box')"></td>
+          <td>Units per Row</td>
+        </tr>
+        <tr>
+          <td colspan="2"><input id="unitsPerRowSlider" type="range" oninput="updateGridPreview('slider')" value="3"
+              min="1" max="4" </input></td>
+        </tr>
+        <tr>
+          <td><input id="rowsPerBeatBox" type="text" value="16" onchange="updateGridPreview('box')"></td>
+          <td>Rows per Beat</td>
+        </tr>
+        <tr>
+          <td colspan="2"><input id="rowsPerBeatSlider" type="range" oninput="updateGridPreview('slider')" value="16"
+              min="2" max="32" step="2" </input></td>
+        </tr>
+        <tr>
+          <td><input id="beatsPerMeasureBox" type="text" value="4" onchange="updateGridPreview('box')"></td>
+          <td>Beats per Measure</td>
+        </tr>
+        <tr>
+          <td colspan="2"><input id="beatsPerMeasureSlider" type="range" oninput="updateGridPreview('slider')" value="4"
+              min="1" max="12" </input></td>
+        </tr>
+        <tr>
+          <td><input id="measureCountBox" type="text" value="4" onchange="updateGridPreview('box')"></td>
+          <td># of Measures</td>
+        </tr>
+        <tr>
+          <td colspan="2"><input id="measureCountSlider" type="range" oninput="updateGridPreview('slider')" value="4"
+              min="1" max="12" </input></td>
+        </tr>
+        <tr>
+          <td>
+            <div id="generate" class="custom-button" onclick="generateGrid()">Generate!</div>
+          </td>
+        </tr>
+      </table>
+      <div id="preview">
+        <table id="gridPreview" cellspacing="0"></table>
+        <table id="pianoPreview" cellspacing="0"></table>
+      </div>
+
+    </div>
+  </div>
   <div id="audioBox"></div>
   <footer>
   </footer>

@@ -14,11 +14,14 @@
     background: lightgreen !important;
 }
 
-[data-parent].white {
+/* Replace with note.white */
+[data-parent].white,
+.whiteNote {
     background: var(--whiteNote);
 }
 
-[data-parent].black {
+[data-parent].black,
+.blackNote {
     background: var(--blackNote);
 }
 

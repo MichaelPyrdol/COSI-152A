@@ -13,39 +13,49 @@
 .blackKeyPlay {
     background: var(--blackKeyPlay) !important;
 }
-#piano{
-    background:white;
-    border-top:1px solid black;
+
+#piano {
+    background: white;
+    border-top: 1px solid black;
 }
 
-.cPlay{
+.cPlay {
     background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 65%, transparent 65%, transparent 100%) !important;
 }
-.dPlay1{
+
+.dPlay1 {
     background: linear-gradient(to right, transparent 0%, transparent 65%, var(--whiteKeyPlay) 65%, var(--whiteKeyPlay) 100%) !important;
 }
-.dPlay2{
+
+.dPlay2 {
     background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 35%, transparent 35%, transparent 100%) !important;
 }
-.ePlay{
+
+.ePlay {
     background: linear-gradient(to right, transparent 0%, transparent 35%, var(--whiteKeyPlay) 35%, var(--whiteKeyPlay) 100%) !important;
 }
-.fPlay{
+
+.fPlay {
     background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 70%, transparent 70%, transparent 100%) !important;
 }
-.gPlay1{
+
+.gPlay1 {
     background: linear-gradient(to right, transparent 0%, transparent 70%, var(--whiteKeyPlay) 70%, var(--whiteKeyPlay) 100%) !important;
 }
-.gPlay2{
+
+.gPlay2 {
     background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 50%, transparent 50%, transparent 100%) !important;
 }
-.aPlay1{
+
+.aPlay1 {
     background: linear-gradient(to right, transparent 0%, transparent 50%, var(--whiteKeyPlay) 50%, var(--whiteKeyPlay) 100%) !important;
 }
-.aPlay2{
+
+.aPlay2 {
     background: linear-gradient(to right, var(--whiteKeyPlay) 0%, var(--whiteKeyPlay) 30%, transparent 30%, transparent 100%) !important;
 }
-.bPlay{
+
+.bPlay {
     background: linear-gradient(to right, transparent 0%, transparent 30%, var(--whiteKeyPlay) 30%, var(--whiteKeyPlay) 100%) !important;
 }
 

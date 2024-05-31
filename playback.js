@@ -1,15 +1,16 @@
 const timeouts = [];
 let paused = true;
 let fromBeginning = true;
-let play=document.getElementById("play");
+let play = document.getElementById("play");
 function playPause() {
     if (paused) {
         paused = false;
-        play.innerHTML="<img src='images/pause.png'>"
+        play.innerHTML = "<img src='images/pause.png'>"
         if (fromBeginning) {
             fromBeginning = false;
             invisible();
             unhover();
+            deselect();
             noteRows.forEach(row => {
                 noteSnapshot.push(row);
                 parentSnapshot.push(row.dataset.parent);
@@ -18,21 +19,26 @@ function playPause() {
                 markerSnapshot.push(row);
             })
         }
-        selectRows.forEach(row => {
-            row.classList.remove("selected");
-        });
-        selectRows = [];
         for (let i = numRows; i >= 0; i--) {
             let play = setTimeout(function () {
                 refreshKeys();
-                // Note movement
                 noteRows.forEach(cell => {
-                    // Note sound
-                    if (cell.dataset.parent.split("-")[0] == numRows) {
-                        playSound(cell.id.split("-")[1]);
-                    }
                     let row = parseInt(cell.id.split("-")[0]);
                     let col = parseInt(cell.id.split("-")[1]);
+                    let parentID = cell.dataset.parent;
+                    // Note sound
+                    if (cell.id == parentID && parentID.split("-")[0] == numRows) {
+                        let nextRow = document.getElementById(row - 1 + "-" + col);
+                        let tempRow = row;
+                        let noteDuration = 0;
+                        while (nextRow.dataset.parent == parentID) {
+                            tempRow--
+                            nextRow = document.getElementById(tempRow + "-" + col);
+                            noteDuration++
+                        }
+                        playSound(col, noteDuration);
+                    }
+                    // Note movement
                     row++;
                     if (row < numRows + 2) {
                         let newCell = document.getElementById(row + "-" + col);
@@ -50,10 +56,6 @@ function playPause() {
                         playKey(key);
                     }
                 });
-                if (tempSelectRows != "") {
-                    selectRows = tempSelectRows;
-                    tempSelectRows = [];
-                }
                 // Measure marker movement
                 markerRows.forEach(cell => {
                     let row = parseInt(cell.id.split("-")[0]);
@@ -69,7 +71,7 @@ function playPause() {
                         markerRows = markerRows.filter(element => element != cell);
                     }
                 })
-                if(i==0&&repeating){
+                if (i == 0 && repeating) {
                     restart();
                 }
             }, delay * (numRows - i), i);
@@ -81,7 +83,7 @@ function playPause() {
 }
 function stop() {
     paused = true;
-    play.innerHTML="<img src='images/play.png'>"
+    play.innerHTML = "<img src='images/play.png'>"
     timeouts.forEach(timeout => clearTimeout(timeout));
 }
 function reset() {
@@ -117,13 +119,13 @@ function restart() {
     reset();
     playPause();
 }
-function repeat(){
-    let repeat=document.getElementById("repeat");
+function repeat() {
+    let repeat = document.getElementById("repeat");
     repeat.classList.toggle("pressed");
-    if(repeating){
-        repeating=false;
-    }else{
-        repeating=true;
+    if (repeating) {
+        repeating = false;
+    } else {
+        repeating = true;
     }
 }
 function invisible() {
@@ -152,45 +154,45 @@ function playKey(key) {
         bottomKey = document.getElementById(numRows + 2 + "-" + whichKey);
         activeKeys.push(bottomKey);
         bottomKey.classList.add("whiteKeyPlay");
-        if (whichKey % 12 == 4) {
-            let cSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            if (cSharp != undefined) {
-                oneKey(cSharp, "dPlay1", "cPlay");
-            }
-        } else if (whichKey % 12 == 6) {
-            let cSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            let dSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            twoKeys(cSharp, dSharp, "cPlay", "dPlay", "ePlay");
-        } else if (whichKey % 12 == 8) {
-            let dSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            oneKey(dSharp, "dPlay2", "ePlay");
-        } else if (whichKey % 12 == 9) {
-            let fSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            oneKey(fSharp, "gPlay1", "fPlay");
-        } else if (whichKey % 12 == 11) {
-            let fSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            let gSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            twoKeys(fSharp, gSharp, "fPlay", "gPlay", "aPlay1");
-        } else if (whichKey % 12 == 1) {
-            let fSharp = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            let gSharp = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
-            twoKeys(fSharp, gSharp, "gPlay2", "aPlay", "bPlay");
-        } else if (whichKey % 12 == 3) {
-            let bFlat = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
-            oneKey(bFlat, "aPlay2", "bPlay");
+        switch (whichKey % 12) {
+            case 1: // A
+                twoKeys(whichKey, "gPlay2", "aPlay", "bPlay");
+                break;
+            case 3: // B
+                oneKey(whichKey - 1, "aPlay2", "bPlay");
+                break;
+            case 4: // C
+                oneKey(whichKey + 1, "dPlay1", "cPlay");
+                break;
+            case 6: // D
+                twoKeys(whichKey, "cPlay", "dPlay", "ePlay");
+                break;
+            case 8: // E
+                oneKey(whichKey - 1, "dPlay2", "ePlay");
+                break;
+            case 9: // F
+                oneKey(whichKey + 1, "gPlay1", "fPlay");
+                break;
+            case 11: // G
+                twoKeys(whichKey, "fPlay", "gPlay", "aPlay1");
         }
     }
 }
-function oneKey(key, key1name, key2name) {
-    if (key.classList.contains(key1name)) {
-        key.classList.remove(key1name);
-        key.classList.add("whiteKeyPlay");
-    } else {
-        key.classList.add(key2name);
-        activeKeys.push(key);
+function oneKey(whichKey, key1name, key2name) {
+    let key = document.getElementById(numRows + 2 + "-" + whichKey)
+    if (key != undefined) {
+        if (key.classList.contains(key1name)) {
+            key.classList.remove(key1name);
+            key.classList.add("whiteKeyPlay");
+        } else {
+            key.classList.add(key2name);
+            activeKeys.push(key);
+        }
     }
 }
-function twoKeys(key1, key2, key1name, key2name, key3name) {
+function twoKeys(whichKey, key1name, key2name, key3name) {
+    let key1 = document.getElementById(numRows + 2 + "-" + (whichKey - 1))
+    let key2 = document.getElementById(numRows + 2 + "-" + (whichKey + 1))
     if (key1 != undefined) {
         if (key1.classList.contains(key1name)) {
             key1.classList.remove(key1name);
@@ -217,8 +219,9 @@ function refreshKeys() {
     })
     activeKeys = [];
 }
-function highlightKey(key){
-    if(paused){
+function highlightKey(key) {
+    if (paused) {
+        refreshKeys();
         playKey(key);
     }
 }

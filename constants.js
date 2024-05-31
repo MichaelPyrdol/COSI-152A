@@ -1,10 +1,10 @@
-const rowsPerBeat = 16; // 16 Integer only
-const measureCount = 4; // 4
-const beatsPerMeasure = 4; // 4 Time Signature
+let unitsPerRow = .3; // .3
+let rowsPerBeat = 16; // 16 Integer only
+let beatsPerMeasure = 4; // 4 Time Signature
+let measureCount = 4; // 4
 let tempo = 120; // 120
-const rowHeight = .3; // .3
 
-const numRows = rowsPerBeat * measureCount * beatsPerMeasure;
+let numRows = rowsPerBeat * measureCount * beatsPerMeasure;
 let delay = 60000 / tempo / rowsPerBeat;
 
 let selectedColumn = 1;
@@ -34,3 +34,7 @@ let done=false;
 let repeating=false;
 
 let selectedNoteDuration=0;
+
+let contextMenuShow=false;
+
+let titleScreen=true;

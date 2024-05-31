@@ -1,2 +1,2 @@
-populate();
+showTitleScreen();
 document.addEventListener("mouseup", stopDrag);
