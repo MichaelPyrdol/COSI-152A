@@ -20,7 +20,11 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 ## Planned features
 -Selecting and moving multiple notes\
 -Copy and paste\
--Saving
+-Saving\
+
+## Further optimizations
+-Instead of moving entire note, only move one row for every note\
+  -This would involve sorting the top note parents (huge)
 
 ## Known bugs
 -Repeat is functional but laggy\
