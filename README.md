@@ -1,12 +1,12 @@
 # Opti-MIDI
-A simple piano sequencer created entirely with JavaScript tables.
+A simple piano sequencer created entirely with HTML tables.
 
 No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Controls
 -Place/select notes with click\
 -Change note duration by right clicking on note\
--Move notes by clicking and holding or using arrow keys on selected note\
+-Move notes by dragging or using arrow keys on selected note\
 -Play/pause with spacebar
 
 ## Supported features
@@ -19,12 +19,11 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Planned features
 -Selecting and moving multiple notes\
--Fine adjustment of notes
+-Copy and paste\
+-Saving
 
 ## Known bugs
 -Repeat is functional but laggy\
 -Notes will override other notes when moved with arrow keys\
 -Beat/measure marker lines are bugged at 1 row per beat\
--Notes longer than 1 beat cannot be moved up/down with the arrow keys\
--Hovering over notes on the topmost row causes errors\
--Hovering over a selected note on the bottom will make an extra row
+-Selecting the last row of a beat with half of a note in it will hover the entire beat

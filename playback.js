@@ -42,7 +42,7 @@ function playPause() {
                     row++;
                     if (row < numRows + 2) {
                         let newCell = document.getElementById(row + "-" + col);
-                        newCell.dataset.parent = parseInt(cell.dataset.parent.split("-")[0]) + 1 + "-" + cell.dataset.parent.split("-")[1];
+                        newCell.dataset.parent = parseInt(parentID.split("-")[0]) + 1 + "-" + parentID.split("-")[1];
                         cell.removeAttribute("data-parent");
                         newCell.classList.add("note");
                         cell.classList.remove("note");

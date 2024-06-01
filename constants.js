@@ -14,7 +14,8 @@ var notey = {};
 let hoverRows = [];
 
 let selectRows = [];
-let tempSelectRows = [];
+let newRows = [];
+let tempNoteRows = [];
 
 let noteRows = [];
 

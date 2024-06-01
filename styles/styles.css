@@ -19,12 +19,9 @@ body {
     /* Hide scroll bar */
     overflow:hidden;
 }
-/* 
-.hide{
-    display:none;
-} */
-.show{
-    display:table;
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
 #gridContainer {

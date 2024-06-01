@@ -25,7 +25,16 @@ function hover(i, j) {
             } else {
                 if (row.dataset.parent == undefined) {
                     // Hovering over empty space — confined to the number of rows per beat
-                    emptyBeat = true;
+                    let emptyBeat = true;
+                    let scout = row;
+                    let m = k;
+                    while (emptyBeat && m > 1 && !scout.classList.contains("beatTick")) {
+                        m--;
+                        scout = document.getElementById(m + "-" + j);
+                        if (scout.classList.contains("note")) {
+                            emptyBeat = false;
+                        }
+                    }
                     while (emptyBeat && k < numRows && !row.classList.contains("beatTick")) {
                         k++;
                         row = document.getElementById(k + "-" + j);
@@ -55,14 +64,14 @@ function hover(i, j) {
                     // Hovering over a note of any duration - checks adjacent table rows for parent
                     // Is there a bug in here??? 17 hoverRows??
                     let parentID = row.dataset.parent;
-                    while (k < numRows && row.dataset.parent == parentID) {
+                    while (k < numRows + 1 && row.dataset.parent == parentID) {
                         k++;
                         row = document.getElementById(k + "-" + j);
                     }
                     row = document.getElementById(k - 1 + "-" + j);
                     let tempSelectedNoteDuration = 0;
                     // Why are there two parent rows???
-                    while (row.dataset.parent == parentID) {
+                    while (k > 0 && row.dataset.parent == parentID) {
                         // console.log(row.id);
                         tempSelectedNoteDuration++;
                         hoverRows.push(row);
@@ -108,7 +117,7 @@ function deselect() {
 }
 // Placing and selecting notes
 function processClick() {
-    if (fromBeginning) {
+    if (fromBeginning && hoverRows != "") {
         // Deselecting previous note
         deselect();
         // Placing a note
@@ -139,10 +148,12 @@ function removeNote(whichRows) {
     });
 }
 function drag() {
-    if (fromBeginning && event.button == 0 && hoverRows[0].classList.contains("note")) {
-        mouseDown = true;
-        removeNote(hoverRows);
-        deselect();
+    if (hoverRows != "") {
+        if (fromBeginning && event.button == 0 && hoverRows[0].classList.contains("note")) {
+            mouseDown = true;
+            removeNote(hoverRows);
+            deselect();
+        }
     }
 }
 function stopDrag() {
@@ -180,7 +191,7 @@ function changeNoteDuration(duration) {
     }
 }
 document.addEventListener('keydown', function (event) {
-    if(!titleScreen){
+    if (!titleScreen) {
         if (event.key == " ") {
             playPause();
         }
@@ -194,10 +205,50 @@ document.addEventListener('keydown', function (event) {
                     deselect();
                     break;
                 case 'ArrowUp':
-                    noteMoveVertical(-rowsPerBeat);
+                    let parentID = selectRows[0].dataset.parent;
+                    let row = parseInt(parentID.split("-")[0]);
+                    let col = parseInt(parentID.split("-")[1]);
+                    if (row - selectedNoteDuration > 0) {
+                        let oldSpot = document.getElementById(parentID);
+                        oldSpotPurge(oldSpot);
+                        let newSpot = document.getElementById(row - selectedNoteDuration + "-" + col);
+                        newSpot.classList.add("note");
+                        newSpot.classList.add("selected");
+                        noteRows.push(newSpot);
+                        selectRows.push(newSpot);
+                        selectRows.forEach(cell => {
+                            cell.dataset.parent = row - 1 + "-" + col;
+                        })
+                        playSound(selectedColumn);
+                    }
                     break;
                 case 'ArrowDown':
-                    noteMoveVertical(rowsPerBeat);
+                    let parentID2 = selectRows[0].dataset.parent;
+                    let row2 = parseInt(parentID2.split("-")[0]);
+                    let col2 = parseInt(parentID2.split("-")[1]);
+                    if (row2 < numRows) {
+                        let oldSpot = document.getElementById(row2 - selectedNoteDuration + 1 + "-" + col2);
+                        oldSpotPurge(oldSpot);
+                        let newSpot = document.getElementById(row2 + 1 + "-" + col2);
+                        newSpot.classList.add("note");
+                        newSpot.classList.add("selected");
+                        let tempSelectRows = selectRows;
+                        selectRows.forEach(cell => {
+                            noteRows = noteRows.filter(element => element != cell);
+                        })
+                        selectRows = [];
+                        noteRows.push(newSpot);
+                        selectRows.push(newSpot);
+                        tempSelectRows.forEach(cell => {
+                            if (cell.id != newSpot.id) {
+                                noteRows.push(cell);
+                                selectRows.push(cell);
+                            }
+                            cell.dataset.parent = row2 + 1 + "-" + col2;
+                        })
+                        newSpot.dataset.parent = row2 + 1 + "-" + col2;
+                        playSound(selectedColumn);
+                    }
                     break;
                 case 'ArrowLeft':
                     if (selectedColumn > 1) {
@@ -215,43 +266,35 @@ document.addEventListener('keydown', function (event) {
         }
     }
 });
-function noteMoveVertical(direction) {
-    if (selectedNoteDuration <= rowsPerBeat) {
-        selectRows.forEach(cell => {
-            let row = parseInt(cell.id.split("-")[0]) + direction;
-            let col = parseInt(cell.id.split("-")[1]);
-            if (row > 0 && row < numRows + 1) {
-                newCell = document.getElementById(row + "-" + col);
-                newCell.dataset.parent = parseInt(cell.dataset.parent.split("-")[0]) + direction + "-" + cell.dataset.parent.split("-")[1];
-                cellMove(newCell);
-            }
-        });
-        afterMove();
-    }
+function oldSpotPurge(oldSpot) {
+    oldSpot.classList.remove("note");
+    oldSpot.classList.remove("selected");
+    oldSpot.removeAttribute("data-parent");
+    noteRows = noteRows.filter(element => element != oldSpot);
+    selectRows = selectRows.filter(element => element != oldSpot);
 }
 function noteMoveHorizontal(direction) {
     selectRows.forEach(cell => {
         let row = parseInt(cell.id.split("-")[0]);
         let col = parseInt(cell.id.split("-")[1]) + direction;
+        let parentID = cell.dataset.parent;
         newCell = document.getElementById(row + "-" + col);
-        newCell.dataset.parent = cell.dataset.parent.split("-")[0] + "-" + col;
-        cellMove(newCell);
+        cell.classList.remove("note");
+        cell.removeAttribute("data-parent");
+        noteRows = noteRows.filter(element => element != cell);
+        newCell.dataset.parent = parentID.split("-")[0] + "-" + col;
+        newRows.push(newCell);
     });
     selectedColumn += direction;
-    afterMove();
-}
-function cellMove(newCell) {
-    newCell.classList.add("selected");
-    newCell.classList.add("note");
-    noteRows.push(newCell);
-    tempSelectRows.push(newCell);
-}
-function afterMove() {
-    removeNote(selectRows);
     deselect();
-    if (tempSelectRows != "") {
-        selectRows = tempSelectRows;
-        tempSelectRows = [];
+    if (newRows != "") {
+        selectRows = newRows;
+        newRows = [];
     }
+    selectRows.forEach(row => {
+        noteRows.push(row);
+        row.classList.add("selected");
+        row.classList.add("note");
+    })
     playSound(selectedColumn);
 }
