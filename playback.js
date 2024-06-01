@@ -1,82 +1,101 @@
-const timeouts = [];
+let timeouts = [];
 let paused = true;
 let fromBeginning = true;
 let play = document.getElementById("play");
+let lastTime = 0;
 function playPause() {
     if (paused) {
         paused = false;
-        play.innerHTML = "<img src='images/pause.png'>"
+        play.innerHTML = "<img src='images/pause.png'>";
         if (fromBeginning) {
             fromBeginning = false;
             invisible();
             unhover();
             deselect();
+            noteSnapshot.length = 0;
+            parentSnapshot.length = 0;
             noteRows.forEach(row => {
                 noteSnapshot.push(row);
                 parentSnapshot.push(row.dataset.parent);
-            })
+            });
+            markerSnapshot.length = 0;
             markerRows.forEach(row => {
                 markerSnapshot.push(row);
-            })
+            });
         }
-        for (let i = numRows; i >= 0; i--) {
-            let play = setTimeout(function () {
-                refreshKeys();
-                noteRows.forEach(cell => {
-                    let row = parseInt(cell.id.split("-")[0]);
-                    let col = parseInt(cell.id.split("-")[1]);
-                    let parentID = cell.dataset.parent;
-                    // Note sound
-                    if (cell.id == parentID && parentID.split("-")[0] == numRows) {
-                        let nextRow = document.getElementById(row - 1 + "-" + col);
-                        let tempRow = row;
-                        let noteDuration = 0;
-                        while (nextRow.dataset.parent == parentID) {
-                            tempRow--
-                            nextRow = document.getElementById(tempRow + "-" + col);
-                            noteDuration++
+        function animate(timestamp) {
+            if (!paused) {
+                if (!lastTime) lastTime = timestamp;
+                const progress = timestamp - lastTime;
+                if (progress >= delay) {
+                    refreshKeys();
+                    noteRows.forEach(cell => {
+                        let row = parseInt(cell.id.split("-")[0]);
+                        let col = parseInt(cell.id.split("-")[1]);
+                        let parentID = cell.dataset.parent;
+                        // Note sound
+                        if (cell.id === parentID && parentID.split("-")[0] == numRows) {
+                            let nextRow = document.getElementById(row - 1 + "-" + col);
+                            let tempRow = row;
+                            let noteDuration = 0;
+                            while (nextRow && nextRow.dataset.parent == parentID) {
+                                tempRow--;
+                                nextRow = document.getElementById(tempRow + "-" + col);
+                                noteDuration++;
+                            }
+                            playSound(col, noteDuration);
                         }
-                        playSound(col, noteDuration);
+                        // Note movement
+                        row++;
+                        if (row < numRows + 2) {
+                            let newCell = document.getElementById(row + "-" + col);
+                            if (newCell) {
+                                newCell.dataset.parent = (parseInt(parentID.split("-")[0]) + 1) + "-" + parentID.split("-")[1];
+                                cell.removeAttribute("data-parent");
+                                newCell.classList.add("note");
+                                cell.classList.remove("note");
+                                noteRows = noteRows.filter(element => element !== cell);
+                                noteRows.push(newCell);
+                            }
+                        } else {
+                            noteRows = noteRows.filter(element => element !== cell);
+                        }
+                        if (cell.id.split("-")[0] == numRows) {
+                            let key = document.getElementById((numRows + 1) + "-" + cell.id.split("-")[1]);
+                            playKey(key);
+                        }
+                    });
+                    // Measure marker movement
+                    markerRows.forEach(cell => {
+                        let row = parseInt(cell.id.split("-")[0]);
+                        let col = parseInt(cell.id.split("-")[1]);
+                        row++;
+                        if (row < numRows + 2) {
+                            let newCell = document.getElementById(row + "-" + col);
+                            if (newCell) {
+                                newCell.classList.add("markerContainer");
+                                cell.classList.remove("markerContainer");
+                                markerRows = markerRows.filter(element => element !== cell);
+                                markerRows.push(newCell);
+                            }
+                        } else {
+                            markerRows = markerRows.filter(element => element !== cell);
+                        }
+                    });
+                    lastTime = timestamp;
+                    if (noteRows.length === 0 && markerRows.length === 0) {
+                        if (repeating) {
+                            restart();
+                        } else {
+                            stop();
+                            return;
+                        }
                     }
-                    // Note movement
-                    row++;
-                    if (row < numRows + 2) {
-                        let newCell = document.getElementById(row + "-" + col);
-                        newCell.dataset.parent = parseInt(parentID.split("-")[0]) + 1 + "-" + parentID.split("-")[1];
-                        cell.removeAttribute("data-parent");
-                        newCell.classList.add("note");
-                        cell.classList.remove("note");
-                        noteRows = noteRows.filter(element => element != cell);
-                        noteRows.push(newCell);
-                    } else {
-                        noteRows = noteRows.filter(element => element != cell);
-                    }
-                    if (cell.id.split("-")[0] == numRows) {
-                        let key = document.getElementById(numRows + 1 + "-" + cell.id.split("-")[1])
-                        playKey(key);
-                    }
-                });
-                // Measure marker movement
-                markerRows.forEach(cell => {
-                    let row = parseInt(cell.id.split("-")[0]);
-                    let col = parseInt(cell.id.split("-")[1]);
-                    row++;
-                    if (row < numRows + 2) {
-                        let newCell = document.getElementById(row + "-" + col);
-                        newCell.classList.add("markerContainer");
-                        cell.classList.remove("markerContainer");
-                        markerRows = markerRows.filter(element => element != cell);
-                        markerRows.push(newCell);
-                    } else {
-                        markerRows = markerRows.filter(element => element != cell);
-                    }
-                })
-                if (i == 0 && repeating) {
-                    restart();
                 }
-            }, delay * (numRows - i), i);
-            timeouts.push(play);
+                requestAnimationFrame(animate);
+            }
         }
+        requestAnimationFrame(animate);
     } else {
         stop();
     }
@@ -85,6 +104,7 @@ function stop() {
     paused = true;
     play.innerHTML = "<img src='images/play.png'>"
     timeouts.forEach(timeout => clearTimeout(timeout));
+    timeouts = [];
 }
 function reset() {
     if (!fromBeginning) {
