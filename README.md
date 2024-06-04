@@ -20,7 +20,7 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 ## Planned features
 -Selecting and moving multiple notes\
 -Copy and paste\
--Saving\
+-Saving
 
 ## Known bugs
 -Repeat is functional but laggy\
