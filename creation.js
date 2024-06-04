@@ -13,8 +13,8 @@ function prepareAudio() {
         }
         audioBox.innerHTML = output;
         for (let i = 1; i <= 88; i++) {
-            notey[i] = document.getElementById("note_" + i);
-            notey[i].volume = 0.2;
+            keyAudio[i] = document.getElementById("note_" + i);
+            keyAudio[i].volume = 0.2;
         }
     }
 }

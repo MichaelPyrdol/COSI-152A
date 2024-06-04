@@ -4,9 +4,9 @@ function playSound(key,noteDuration) {
         let unitDuration=60000 / (tempo * rowsPerBeat*2);
         deloy=noteDuration*unitDuration*2;
     }
-    notey[key].play();
+    keyAudio[key].play();
     setTimeout(() => {
-        notey[key].currentTime = notey[key].duration;
+        keyAudio[key].currentTime = keyAudio[key].duration;
     }, deloy);
 }
 function changeTempo(elem) {
@@ -36,6 +36,7 @@ function clearNotes() {
             row.classList.remove("note");
         })
     })
+    noteSnapshot=[];
     notes = [];
     deselect();
 }

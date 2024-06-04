@@ -62,7 +62,6 @@ function hover(i, j) {
                     }
                 } else {
                     // Hovering over a note of any duration - checks adjacent table rows for parent
-                    // Is there a bug in here??? 17 hoverRows??
                     let parentID = row.dataset.parent;
                     while (k < numRows + 1 && row.dataset.parent == parentID) {
                         k++;
@@ -70,9 +69,7 @@ function hover(i, j) {
                     }
                     row = document.getElementById(k - 1 + "-" + j);
                     let tempSelectedNoteDuration = 0;
-                    // Why are there two parent rows???
                     while (k > 0 && row.dataset.parent == parentID) {
-                        // console.log(row.id);
                         tempSelectedNoteDuration++;
                         hoverRows.push(row);
                         k--;
@@ -113,7 +110,6 @@ function deselect() {
         row.classList.remove("selected");
     });
     selectRows = [];
-    // selectedNoteDuration = 0;
 }
 // Placing and selecting notes
 function processClick() {

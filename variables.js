@@ -7,35 +7,33 @@ let tempo = 120; // 120
 let numRows = rowsPerBeat * measureCount * beatsPerMeasure;
 let delay = 60000 / tempo / rowsPerBeat;
 
+let titleScreen = true;
+
+// Editor
+
 let selectedColumn = 1;
 let hoverColumn = 1;
-var notey = {};
+
+// Playback
+
+var keyAudio = {};
 
 let hoverRows = [];
 
 let selectRows = [];
-let newRows = [];
-let tempNoteRows = [];
-
 let notes = [];
 
-let markerRows=[];
+let markerRows = [];
 
-let interval;
+let noteSnapshot = [];
+let markerSnapshot = [];
 
-let noteSnapshot=[];
-let parentSnapshot=[];
-let markerSnapshot=[];
+let activeKeys = [];
 
-let activeKeys=[];
+let mouseDown = false;
 
-let mouseDown=false;
+let repeating = false;
 
-let done=false;
-let repeating=false;
+let selectedNoteDuration = 0;
 
-let selectedNoteDuration=0;
-
-let contextMenuShow=false;
-
-let titleScreen=true;
+let contextMenuShow = false;

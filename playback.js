@@ -78,7 +78,7 @@ function playPause() {
                         notes[noteIndex] = null;
                     }
                 })
-                notes = notes.filter(note => note !== null);
+                notes = notes.filter(note => note != null);
                 // Measure marker movement
                 markerRows.forEach(cell => {
                     let row = parseInt(cell.id.split("-")[0]);
@@ -96,7 +96,7 @@ function playPause() {
                         markerRows = markerRows.filter(element => element !== cell);
                     }
                 });
-                if (i==0) {
+                if (i == 0) {
                     refreshKeys();
                     if (repeating) {
                         restart();
