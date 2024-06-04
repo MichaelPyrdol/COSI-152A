@@ -17,7 +17,7 @@ let selectRows = [];
 let newRows = [];
 let tempNoteRows = [];
 
-let noteRows = [];
+let notes = [];
 
 let markerRows=[];
 

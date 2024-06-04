@@ -30,11 +30,13 @@ function finishSlide() {
     }
 }
 function clearNotes() {
-    noteRows.forEach(row => {
-        row.removeAttribute("data-parent");
-        row.classList.remove("note");
+    notes.forEach(note => {
+        note.forEach(row=>{
+            row.removeAttribute("data-parent");
+            row.classList.remove("note");
+        })
     })
-    noteRows = [];
+    notes = [];
     deselect();
 }
 const contextMenu = document.getElementById('custom-context-menu');

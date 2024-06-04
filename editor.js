@@ -132,20 +132,26 @@ function processClick() {
 function placeNote() {
     if (fromBeginning) {
         let parentID = hoverRows[0].id;
+        let note = [];
         hoverRows.forEach(row => {
             row.classList.add("note");
             row.dataset.parent = parentID;
-            noteRows.push(row);
+            note.push(row);
         });
+        notes.push(note)
         select();
     }
 }
 function removeNote(whichRows) {
-    whichRows.forEach(row => {
-        row.classList.remove("note");
-        row.removeAttribute("data-parent");
-        noteRows = noteRows.filter(element => element != row);
-    });
+    notes.forEach(note => {
+        if (note[0].dataset.parent == whichRows[0].dataset.parent) {
+            whichRows.forEach(row => {
+                row.classList.remove("note");
+                row.removeAttribute("data-parent");
+            });
+            notes = notes.filter(element => element != note);
+        }
+    })
 }
 function drag() {
     if (hoverRows != "") {
@@ -209,16 +215,27 @@ document.addEventListener('keydown', function (event) {
                     let row = parseInt(parentID.split("-")[0]);
                     let col = parseInt(parentID.split("-")[1]);
                     if (row - selectedNoteDuration > 0) {
+                        let theNote = [];
+                        notes.forEach((note, noteIndex) => {
+                            if (note[0].dataset.parent == parentID) {
+                                notes[noteIndex] = null;
+                            }
+                        })
                         let oldSpot = document.getElementById(parentID);
-                        oldSpotPurge(oldSpot);
+                        oldSpotPurge(theNote, oldSpot);
                         let newSpot = document.getElementById(row - selectedNoteDuration + "-" + col);
                         newSpot.classList.add("note");
                         newSpot.classList.add("selected");
-                        noteRows.push(newSpot);
+                        theNote.push(newSpot);
                         selectRows.push(newSpot);
                         selectRows.forEach(cell => {
                             cell.dataset.parent = row - 1 + "-" + col;
                         })
+                        notes = notes.filter(note => note != null);
+                        selectRows.forEach(row => {
+                            theNote.push(row);
+                        })
+                        notes.push(theNote);
                         playSound(selectedColumn);
                     }
                     break;
@@ -227,26 +244,31 @@ document.addEventListener('keydown', function (event) {
                     let row2 = parseInt(parentID2.split("-")[0]);
                     let col2 = parseInt(parentID2.split("-")[1]);
                     if (row2 < numRows) {
+                        let theNote2 = [];
+                        notes.forEach((note, noteIndex) => {
+                            if (note[0].dataset.parent == parentID2) {
+                                notes[noteIndex] = null;
+                            }
+                        })
                         let oldSpot = document.getElementById(row2 - selectedNoteDuration + 1 + "-" + col2);
-                        oldSpotPurge(oldSpot);
+                        oldSpotPurge(theNote2, oldSpot);
                         let newSpot = document.getElementById(row2 + 1 + "-" + col2);
                         newSpot.classList.add("note");
                         newSpot.classList.add("selected");
                         let tempSelectRows = selectRows;
-                        selectRows.forEach(cell => {
-                            noteRows = noteRows.filter(element => element != cell);
-                        })
                         selectRows = [];
-                        noteRows.push(newSpot);
+                        theNote2.push(newSpot);
                         selectRows.push(newSpot);
                         tempSelectRows.forEach(cell => {
                             if (cell.id != newSpot.id) {
-                                noteRows.push(cell);
+                                theNote2.push(cell);
                                 selectRows.push(cell);
                             }
                             cell.dataset.parent = row2 + 1 + "-" + col2;
                         })
                         newSpot.dataset.parent = row2 + 1 + "-" + col2;
+                        notes = notes.filter(note => note != null);
+                        notes.push(theNote2);
                         playSound(selectedColumn);
                     }
                     break;
@@ -266,35 +288,42 @@ document.addEventListener('keydown', function (event) {
         }
     }
 });
-function oldSpotPurge(oldSpot) {
+function oldSpotPurge(theNote, oldSpot) {
     oldSpot.classList.remove("note");
     oldSpot.classList.remove("selected");
     oldSpot.removeAttribute("data-parent");
-    noteRows = noteRows.filter(element => element != oldSpot);
+    theNote = theNote.filter(element => element != oldSpot);
     selectRows = selectRows.filter(element => element != oldSpot);
 }
 function noteMoveHorizontal(direction) {
+    let parentID = selectRows[0].dataset.parent;
+    let theNote = [];
+    let newNote = [];
+    notes.forEach((note, noteIndex) => {
+        if (note[0].dataset.parent == parentID) {
+            notes[noteIndex] = null;
+        }
+    })
     selectRows.forEach(cell => {
         let row = parseInt(cell.id.split("-")[0]);
         let col = parseInt(cell.id.split("-")[1]) + direction;
-        let parentID = cell.dataset.parent;
-        newCell = document.getElementById(row + "-" + col);
+        let newCell = document.getElementById(row + "-" + col);
         cell.classList.remove("note");
         cell.removeAttribute("data-parent");
-        noteRows = noteRows.filter(element => element != cell);
         newCell.dataset.parent = parentID.split("-")[0] + "-" + col;
-        newRows.push(newCell);
+        newNote.push(newCell);
     });
     selectedColumn += direction;
     deselect();
-    if (newRows != "") {
-        selectRows = newRows;
-        newRows = [];
+    if (newNote.length > 0) {
+        selectRows = newNote;
     }
+    notes = notes.filter(note => note != null);
     selectRows.forEach(row => {
-        noteRows.push(row);
+        theNote.push(row);
         row.classList.add("selected");
         row.classList.add("note");
     })
+    notes.push(theNote);
     playSound(selectedColumn);
 }

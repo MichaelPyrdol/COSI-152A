@@ -2,7 +2,6 @@ let timeouts = [];
 let paused = true;
 let fromBeginning = true;
 let play = document.getElementById("play");
-let lastTime = 0;
 function playPause() {
     if (paused) {
         paused = false;
@@ -12,90 +11,103 @@ function playPause() {
             invisible();
             unhover();
             deselect();
-            noteSnapshot.length = 0;
-            parentSnapshot.length = 0;
-            noteRows.forEach(row => {
-                noteSnapshot.push(row);
-                parentSnapshot.push(row.dataset.parent);
+            noteSnapshot = [];
+            parentSnapshot = [];
+            notes.forEach(note => {
+                noteSnapshot.push(note);
+                parentSnapshot.push(note[0].dataset.parent);
             });
             markerSnapshot.length = 0;
             markerRows.forEach(row => {
                 markerSnapshot.push(row);
             });
         }
-        function animate(timestamp) {
-            if (!paused) {
-                if (!lastTime) lastTime = timestamp;
-                const progress = timestamp - lastTime;
-                if (progress >= delay) {
-                    refreshKeys();
-                    noteRows.forEach(cell => {
-                        let row = parseInt(cell.id.split("-")[0]);
+        for (let i = numRows; i >= 0; i--) {
+            let play = setTimeout(function () {
+                refreshKeys();
+                notes.forEach((note, noteIndex) => {
+                    let parentID = note[0].dataset.parent;
+                    let newNoteArray = [];
+                    let lastRow = "";
+                    let min = numRows;
+                    note.forEach(cell => {
+                        row = parseInt(cell.id.split("-")[0]);
+                        if (row < min) {
+                            min = row;
+                        }
+                    })
+                    note.forEach(cell => {
+                        row = parseInt(cell.id.split("-")[0]);
+                        if (row == min) {
+                            lastRow = cell;
+                        } else {
+                            newNoteArray.push(cell);
+                        }
+                    })
+                    if (lastRow) {
+                        lastRow.removeAttribute("data-parent");
+                        lastRow.classList.remove("note");
+                    }
+                    let parentRow = parseInt(parentID.split("-")[0]);
+                    let parentCol = parseInt(parentID.split("-")[1]);
+                    if (parentRow + 1 < numRows + 1) {
+                        let newCell = document.getElementById(parentRow + 1 + "-" + parentCol);
+                        if (newCell) {
+                            newCell.classList.add("note");
+                            newNoteArray.push(newCell);
+                        }
+                    }
+                    newNoteArray.forEach(cell => {
+                        cell.dataset.parent = parentRow + 1 + "-" + parentCol;
+                    });
+                    note.forEach(cell => {
                         let col = parseInt(cell.id.split("-")[1]);
-                        let parentID = cell.dataset.parent;
                         // Note sound
                         if (cell.id === parentID && parentID.split("-")[0] == numRows) {
-                            let nextRow = document.getElementById(row - 1 + "-" + col);
-                            let tempRow = row;
-                            let noteDuration = 0;
-                            while (nextRow && nextRow.dataset.parent == parentID) {
-                                tempRow--;
-                                nextRow = document.getElementById(tempRow + "-" + col);
-                                noteDuration++;
-                            }
-                            playSound(col, noteDuration);
+                            playSound(col, note.length);
                         }
-                        // Note movement
-                        row++;
-                        if (row < numRows + 2) {
-                            let newCell = document.getElementById(row + "-" + col);
-                            if (newCell) {
-                                newCell.dataset.parent = (parseInt(parentID.split("-")[0]) + 1) + "-" + parentID.split("-")[1];
-                                cell.removeAttribute("data-parent");
-                                newCell.classList.add("note");
-                                cell.classList.remove("note");
-                                noteRows = noteRows.filter(element => element !== cell);
-                                noteRows.push(newCell);
-                            }
-                        } else {
-                            noteRows = noteRows.filter(element => element !== cell);
-                        }
+                        // Piano display
                         if (cell.id.split("-")[0] == numRows) {
                             let key = document.getElementById((numRows + 1) + "-" + cell.id.split("-")[1]);
                             playKey(key);
                         }
                     });
-                    // Measure marker movement
-                    markerRows.forEach(cell => {
-                        let row = parseInt(cell.id.split("-")[0]);
-                        let col = parseInt(cell.id.split("-")[1]);
-                        row++;
-                        if (row < numRows + 2) {
-                            let newCell = document.getElementById(row + "-" + col);
-                            if (newCell) {
-                                newCell.classList.add("markerContainer");
-                                cell.classList.remove("markerContainer");
-                                markerRows = markerRows.filter(element => element !== cell);
-                                markerRows.push(newCell);
-                            }
-                        } else {
+                    if (newNoteArray.length > 0) {
+                        notes[noteIndex] = newNoteArray;
+                    } else {
+                        notes[noteIndex] = null;
+                    }
+                })
+                notes = notes.filter(note => note !== null);
+                // Measure marker movement
+                markerRows.forEach(cell => {
+                    let row = parseInt(cell.id.split("-")[0]);
+                    let col = parseInt(cell.id.split("-")[1]);
+                    row++;
+                    if (row < numRows + 2) {
+                        let newCell = document.getElementById(row + "-" + col);
+                        if (newCell) {
+                            newCell.classList.add("markerContainer");
+                            cell.classList.remove("markerContainer");
                             markerRows = markerRows.filter(element => element !== cell);
+                            markerRows.push(newCell);
                         }
-                    });
-                    lastTime = timestamp;
-                    if (noteRows.length === 0 && markerRows.length === 0) {
-                        if (repeating) {
-                            restart();
-                        } else {
-                            stop();
-                            return;
-                        }
+                    } else {
+                        markerRows = markerRows.filter(element => element !== cell);
+                    }
+                });
+                if (i==0) {
+                    refreshKeys();
+                    if (repeating) {
+                        restart();
+                    } else {
+                        stop();
+                        return;
                     }
                 }
-                requestAnimationFrame(animate);
-            }
+            }, delay * (numRows - i), i);
+            timeouts.push(play);
         }
-        requestAnimationFrame(animate);
     } else {
         stop();
     }
@@ -112,16 +124,21 @@ function reset() {
         stop();
         visible();
         refreshKeys();
-        noteRows.forEach(row => {
-            row.removeAttribute("data-parent");
-            row.classList.remove("note");
-            row.classList.remove("selected");
+        notes.forEach(note => {
+            note.forEach(row => {
+                row.removeAttribute("data-parent");
+                row.classList.remove("note");
+                row.classList.remove("selected");
+            })
         })
-        noteRows = [];
-        noteSnapshot.forEach(row => {
-            row.dataset.parent = parentSnapshot.shift();
-            row.classList.add("note");
-            noteRows.push(row)
+        notes = [];
+        noteSnapshot.forEach(note => {
+            parentID = parentSnapshot.shift()
+            note.forEach(row => {
+                row.dataset.parent = parentID;
+                row.classList.add("note");
+            })
+            notes.push(note);
         })
         noteSnapshot = [];
         markerRows.forEach(row => {

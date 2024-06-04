@@ -22,10 +22,6 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 -Copy and paste\
 -Saving\
 
-## Further optimizations
--Instead of moving entire note, only move one row for every note\
-  -This would involve sorting the top note parents (huge)
-
 ## Known bugs
 -Repeat is functional but laggy\
 -Notes will override other notes when moved with arrow keys\
