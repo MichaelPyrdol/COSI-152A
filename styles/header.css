@@ -3,7 +3,6 @@ header {
     height: 50px;
     display: flex;
     justify-content: flex-start;
-    position: relative;
 }
 
 #titles {

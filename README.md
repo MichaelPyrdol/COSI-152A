@@ -15,15 +15,15 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 -Moving individual notes\
 -Playback (restart, play, reset, repeat)\
 -Tempo adjust\
--Clear all notes
+-Clear all notes\
+-Saving and loading arrangements
 
 ## Planned features
 -Selecting and moving multiple notes\
--Copy and paste\
--Saving
+-Copy and paste
 
 ## Known bugs
 -Repeat is functional but laggy\
--Notes will override other notes when moved with arrow keys\
+-Notes will eat other notes when moved with arrow keys\
 -Beat/measure marker lines are bugged at 1 row per beat\
 -Selecting the last row of a beat with half of a note in it will hover the entire beat

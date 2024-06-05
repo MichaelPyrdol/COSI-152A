@@ -33,6 +33,10 @@
     background: var(--header);
 }
 
+.selected.hover {
+    background: blue !important;
+}
+
 .beatTick {
     position: relative;
     box-shadow: 0 1px 0 grey;

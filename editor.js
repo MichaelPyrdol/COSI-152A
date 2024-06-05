@@ -1,90 +1,93 @@
 function hover(i, j) {
-    if (fromBeginning && i > 0 && i < numRows) {
-        if (mouseDown && hoverColumn != j) {
-            playSound(j);
-        }
-        let row = document.getElementById(i + "-" + j);
-        if (!row.classList.contains("hover") && !contextMenuShow) {
-            unhover();
-            hoverColumn = j;
-            let k = i;
-            if (mouseDown) {
-                // Dragging a note — size determined by selected note duration
-                while (k < numRows && !row.classList.contains("beatTick")) {
-                    k++;
-                    row = document.getElementById(k + "-" + j);
-                }
-                let l = k;
-                if (l - selectedNoteDuration >= 0) {
-                    while (k > l - selectedNoteDuration) {
-                        hoverRows.push(row);
-                        k--;
-                        row = document.getElementById(k + "-" + j);
-                    }
-                }
-            } else {
-                if (row.dataset.parent == undefined) {
-                    // Hovering over empty space — confined to the number of rows per beat
-                    let emptyBeat = true;
-                    let scout = row;
-                    let m = k;
-                    while (emptyBeat && m > 1 && !scout.classList.contains("beatTick")) {
-                        m--;
-                        scout = document.getElementById(m + "-" + j);
-                        if (scout.classList.contains("note")) {
-                            emptyBeat = false;
-                        }
-                    }
-                    while (emptyBeat && k < numRows && !row.classList.contains("beatTick")) {
+    if (!titleScreen && fromBeginning) {
+        if (i > 0 && i <= numRows) {
+            if (mouseDown && hoverColumn != j) {
+                playSound(j);
+            }
+            let row = document.getElementById(i + "-" + j);
+            if (!row.classList.contains("hover") && !contextMenuShow) {
+                unhover();
+                hoverColumn = j;
+                let k = i;
+                if (mouseDown) {
+                    // Dragging a note — size determined by selected note duration
+                    while (k < numRows && !row.classList.contains("beatTick")) {
                         k++;
                         row = document.getElementById(k + "-" + j);
-                        if (row.classList.contains("note")) {
-                            emptyBeat = false;
-                        }
                     }
                     let l = k;
-                    // Debug start
-                    if (emptyBeat) {
-                        if (event.shiftKey && l - rowsPerBeat >= 0) {
-                            while (k > l - rowsPerBeat / 2) {
-                                hoverRows.push(row);
-                                k--;
-                                row = document.getElementById(k + "-" + j);
-                            }
-                            // Debug end
-                        } else {
-                            while (k > l - rowsPerBeat) {
-                                hoverRows.push(row);
-                                k--;
-                                row = document.getElementById(k + "-" + j);
-                            }
+                    if (l - selectedNoteDuration >= 0) {
+                        while (k > l - selectedNoteDuration) {
+                            hoverRows.push(row);
+                            k--;
+                            row = document.getElementById(k + "-" + j);
                         }
                     }
                 } else {
-                    // Hovering over a note of any duration - checks adjacent table rows for parent
-                    let parentID = row.dataset.parent;
-                    while (k < numRows + 1 && row.dataset.parent == parentID) {
-                        k++;
-                        row = document.getElementById(k + "-" + j);
-                    }
-                    row = document.getElementById(k - 1 + "-" + j);
-                    let tempSelectedNoteDuration = 0;
-                    while (k > 0 && row.dataset.parent == parentID) {
-                        tempSelectedNoteDuration++;
-                        hoverRows.push(row);
-                        k--;
-                        row = document.getElementById(k + "-" + j);
-                    }
-                    hoverRows.shift(); // ???
-                    tempSelectedNoteDuration--;
-                    if (tempSelectedNoteDuration != selectedNoteDuration) {
-                        selectedNoteDuration = tempSelectedNoteDuration;
+                    if (row.dataset.parent == undefined) {
+                        // Hovering over empty space — confined to the number of rows per beat
+                        let emptyBeat = true;
+                        let scout = row;
+                        let m = k;
+                        while (emptyBeat && m > 1 && !scout.classList.contains("beatTick")) {
+                            m--;
+                            scout = document.getElementById(m + "-" + j);
+                            if (scout.classList.contains("note")) {
+                                emptyBeat = false;
+                            }
+                        }
+                        while (emptyBeat && k < numRows && !row.classList.contains("beatTick")) {
+                            k++;
+                            row = document.getElementById(k + "-" + j);
+                            if (row.classList.contains("note")) {
+                                emptyBeat = false;
+                            }
+                        }
+                        let l = k;
+                        // Debug start
+                        if (emptyBeat) {
+                            if (event.shiftKey && l - rowsPerBeat >= 0) {
+                                while (k > l - rowsPerBeat / 2) {
+                                    hoverRows.push(row);
+                                    k--;
+                                    row = document.getElementById(k + "-" + j);
+                                }
+                                // Debug end
+                            } else {
+                                while (k > l - rowsPerBeat) {
+                                    hoverRows.push(row);
+                                    k--;
+                                    row = document.getElementById(k + "-" + j);
+                                }
+                            }
+                        }
+                    } else {
+                        // Hovering over a note
+                        let parentID = row.dataset.parent;
+                        notes.forEach(note => {
+                            if (note[0].dataset.parent == parentID) {
+                                note.forEach(cell => {
+                                    hoverRows.push(cell);
+                                })
+                                selectedNoteDuration = note.length;
+                            }
+                        })
                     }
                 }
+                hoverRows.forEach(row1 => {
+                    row1.classList.add("hover");
+                });
             }
-            hoverRows.forEach(row1 => {
-                row1.classList.add("hover");
-            });
+        } else {
+            key = document.getElementById("top-" + j);
+            highlightKey(key);
+            if (i == numRows + 2) {
+                if (key.classList.contains("white")) {
+                    highlightKey(key);
+                } else {
+                    refreshKeys();
+                }
+            }
         }
     }
 }
@@ -97,13 +100,12 @@ function unhover() {
     }
 }
 function select() {
-    selectedNoteDuration = 0;
-    hoverRows.forEach(row => {
+    selectRows = hoverRows;
+    selectRows.forEach(row => {
         row.classList.add("selected");
-        selectRows.push(row);
-        selectedNoteDuration++;
     });
-    selectedColumn = parseInt(hoverRows[0].id.split("-")[1]);
+    selectedNoteDuration = selectRows.length;
+    selectedColumn = parseInt(selectRows[0].id.split("-")[1]);
 }
 function deselect() {
     selectRows.forEach(row => {

@@ -35,10 +35,10 @@
   </div>
   <header>
     <a href="https://michaelpyrdol.github.io/opti-midi/" id="titles" href="#">
-      <div id="opti-midi">Opti-MIDI alpha</div>
+      <div id="opti-midi">Opti-MIDI v1.0.0</div>
       <div id="michael-pyrdol">by Michael Pyrdol 2024</div>
     </a>
-    <div id="controls">
+    <div id="controls" style="display:none">
       <div id="restart" class="custom-button square" onclick="restart()"><img src="images/restart.png"></div>
       <div id="play" class="custom-button square" onclick="playPause()"><img src="images/play.png"></div>
       <div id="reset" class="custom-button square" onclick="reset()"><img src="images/stop.png"></div>
@@ -49,12 +49,11 @@
         <input id="tempoSlider" type="range" oninput="changeTempo('slider')" onchange="finishSlide()" min="1" max="400"
           value="120">
       </div>
-      <div id="clear" class="custom-button" onclick="clearNotes()">Clear notes</div>
+      <div id="clear" class="custom-button" onclick="clearNotes()">Clear</div>
+      <div id="save" class="custom-button" onclick="save()">Save</div>
     </div>
   </header>
-  <div id="gridContainer">
-    <table id="grid" class="hide" cellspacing='0'></table>
-  </div>
+  <table id="grid" cellspacing='0'></table>
   <table id="piano" cellspacing='0'></table>
   <div id="titleScreen">
     <div id="intro">
@@ -62,7 +61,7 @@
           <h2>A web-based piano sequencer</h2>
           <h2>built with HTML tables</h2>
     </div>
-    <div id="controlsAndPreview">
+    <div id="tables">
       <table id="titleControls">
         <tr>
           <th colspan="2">Settings</th>
@@ -102,22 +101,29 @@
         <tr>
           <td id="generatePart" colspan="2">
             <div id="generate" class="custom-button" style="display:flex; align-items: center;"
-              onclick="generateGrid()">Generate!</div>
+              onclick="generateGrid()">
+              Generate!</div>
           </td>
         </tr>
       </table>
-      <div id="preview">
-        <table id="gridPreview" cellspacing="0"></table>
-        <table id="pianoPreview" cellspacing="0"></table>
-      </div>
+      <table id="loadTable">
+        <tr>
+          <td><input id="fileInput" type="file"></input></td>
+        </tr>
+      </table>
+    </div>
+    <div id="preview">
+      <table id="gridPreview" cellspacing="0"></table>
+      <table id="pianoPreview" cellspacing="0"></table>
     </div>
   </div>
   <div id="audioBox"></div>
   <footer>
   </footer>
-  <script src="constants.js"></script>
+  <script src="variables.js"></script>
   <script src="creation.js"></script>
   <script src="scripts.js"></script>
+  <script src="keys.js"></script>
   <script src="editor.js"></script>
   <script src="playback.js"></script>
   <script src="main.js"></script>

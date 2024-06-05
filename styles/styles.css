@@ -7,6 +7,7 @@
     --whiteKeyPlay: limegreen;
     --blackKeyPlay: darkgreen;
     --header: cornflowerblue;
+    --row: .3px;
 }
 
 body {
@@ -16,16 +17,12 @@ body {
     user-select: none;
     -webkit-user-drag: none;
     -webkit-touch-callout: none;
-    /* Hide scroll bar */
-    overflow:hidden;
+    overflow-y: scroll;
 }
+
 a {
     text-decoration: none;
     color: inherit;
-}
-
-#gridContainer {
-    display: flex;
 }
 
 #grid,
@@ -40,6 +37,11 @@ td {
     width: 1%;
 }
 
+#grid td,
+#gridPreview td {
+    height: var(--row)
+}
+
 #custom-context-menu {
     position: absolute;
     display: none;
@@ -50,7 +52,7 @@ td {
     border: 1px solid rgba(0, 0, 0, 0.1);
     z-index: 1000;
     overflow: hidden;
-    border:2px solid black;
+    border: 2px solid black;
 }
 
 #custom-context-menu .menu-row {
@@ -79,4 +81,28 @@ td {
     border: none;
     border-top: 1px solid #e0e0e0;
     margin: 4px 0;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    /* Width of the entire scrollbar */
+    height: 12px;
+    /* Height of the entire scrollbar (for horizontal scrollbars) */
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background);
+    /* Color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--blackKey);
+    /* Color of the scrollbar handle */
+    border-radius: 10px;
+    /* Rounded corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--whiteKey);
+    /* Color of the scrollbar handle on hover */
 }

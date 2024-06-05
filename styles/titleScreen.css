@@ -1,59 +1,74 @@
 #titleScreen {
     text-align: center;
-    display:flex;
-    margin-top:170px;
+    display: flex;
+    margin-top: 140px;
     align-items: center;
     justify-content: center;
 }
 
-#intro{
-    width:40%;
-    height:80px;
-    margin-left:50px;
+#intro {
+    width: 40%;
+    height: 200px;
+    margin-left: 50px;
 }
 
-#titleControls {
-    background-color: grey;
-    margin-left:50px;
-    margin-top:50px;
+#tables {
+    margin-right: 30%;
+}
+
+#titleControls,
+#loadTable {
+    background-color: var(--header);
+    border-radius: 5px;
+}
+#titleControls{
+    margin-top: 50px;
+}
+#loadTable{
+    margin-top:20px;
 }
 
 #titleControls td:first-child {
-    width:0px;
+    width: 10px;
     text-align: right;
 }
 
 #titleControls td:last-child {
-    width: 0px;
+    width: 10px;
     text-align: left;
 }
-#titleControls input[type="range"]{
+
+#titleControls input[type="text"] {
+    width: 50%;
+    text-align: center;
+    font-size:15px;
+}
+
+#titleControls input[type="range"] {
     display: block;
     margin: 0 auto;
-    width:90%;
+    width: 90%;
 }
 
 #gridPreview td,
 #pianoPreview td {
     width: .1%;
 }
-#preview{
-    width:15%;
-    margin-right:auto;
-    position:absolute;
-    margin-left:30%;
-    bottom:0;
+
+#preview {
+    width: 15%;
+    position: absolute;
+    margin-right: 15%;
+    right: 0;
+    top: 0;
+    margin-top:59px;
 }
 
-#controlsAndPreview{
-    display:flex;
-    width:60%;
-    height:200px;
-}
-h1{
-    font-size:50px;
+h1 {
+    font-size: 50px;
 }
 
-#generate{
-    margin:auto 78px;
+#generate {
+    margin: auto 78px;
+    font-size: 20px;
 }

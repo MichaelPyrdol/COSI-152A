@@ -1,6 +1,3 @@
-// document.body.addEventListener('click', function () {
-//     prepareAudio();
-// }, { once: true });
 function prepareAudio() {
     var isSafari = window.safari !== undefined;
     if (isSafari) {
@@ -20,17 +17,11 @@ function prepareAudio() {
 }
 function generateGrid() {
     grid.innerHTML = createGrid();
-    let measureNumber = 1;
     for (let i = numRows; i > 0; i -= rowsPerBeat * beatsPerMeasure) {
         for (let j = 1; j <= 88; j++) {
             let beat = document.getElementById(i + "-" + j);
             beat.classList.add("measureTick");
         }
-        let beat = document.getElementById(i + "-1");
-        markerRows.push(beat);
-        beat.classList.add("markerContainer");
-        beat.innerHTML = "<span class='marker'>" + measureNumber + "</span>";
-        measureNumber++;
     }
     for (let i = numRows - rowsPerBeat; i > 0; i -= rowsPerBeat) {
         for (let j = 1; j <= 88; j++) {
@@ -38,43 +29,44 @@ function generateGrid() {
             beat.classList.add("beatTick");
         }
     }
+    let measureNumber = 1;
+    for (let i = numRows; i > 0; i -= rowsPerBeat * beatsPerMeasure) {
+        let beat = document.getElementById(i + "-1");
+        markerRows.push(beat);
+        beat.classList.add("markerContainer");
+        beat.innerHTML = "<span class='marker'>" + measureNumber + "</span>";
+        measureNumber++;
+    }
+    for (let j = 1; j <= 88; j++) {
+        let beat = document.getElementById("1-" + j);
+        markerRows.push(beat);
+        beat.classList.add("markerContainer");
+    }
+    gridAnimation();
+}
+function gridAnimation(){
     grid.addEventListener("click", processClick);
     grid.addEventListener("mousedown", drag);
     grid.addEventListener("mouseleave", unhover);
+    piano.addEventListener("click", playSelected);
 
-    let rows = grid.getElementsByTagName("tr");
+    // Piano intro animation
     let del = 1600 / rowsPerBeat / beatsPerMeasure / measureCount;
+    let rows = grid.getElementsByTagName("tr");
     for (let i = 0; i < numRows; i++) {
         setTimeout(() => {
-            rows[i].style.display = "table-row";
+            rows[i].removeAttribute("style");
         }, del * i);
     }
     preparePiano();
+    controls.removeAttribute("style");
     let titleScreeny = document.getElementById("titleScreen");
     titleScreeny.remove();
-    titleScreen=false;
+    titleScreen = false;
 }
 function preparePiano() {
     piano.innerHTML = createPiano();
     piano.addEventListener("mouseleave", refreshKeys);
-    for (let j = 1; j <= 88; j++) {
-        let topKey = document.getElementById(numRows + 1 + "-" + j);
-        topKey.classList.add("topKey");
-        topKey.addEventListener("mouseover", function () {
-            highlightKey(topKey);
-        });
-        let bottomKey = document.getElementById(numRows + 2 + "-" + j);
-        bottomKey.classList.add("bottomKey");
-        if (bottomKey.classList.contains("white")) {
-            bottomKey.addEventListener("mouseover", function () {
-                highlightKey(topKey);
-            });
-        } else {
-            bottomKey.addEventListener("mouseover", function () {
-                refreshKeys();
-            });
-        }
-    }
     for (let i = 1; i <= numRows + 2; i++) {
         for (let j = 3; j < 88; j += 12) {
             let whiteLeftTop = document.getElementById(i + "-" + j);
@@ -89,20 +81,28 @@ function preparePiano() {
             whiteLeftBottom.classList.add("whiteLeft");
         }
     }
+    for (let j = 1; j <= 88; j++) {
+        let topKey = document.getElementById(numRows + 1 + "-" + j);
+        topKey.id = "top-" + j;
+        topKey.classList.add("topKey");
+        let bottomKey = document.getElementById(numRows + 2 + "-" + j);
+        bottomKey.id = "bottom-" + j;
+        bottomKey.classList.add("bottomKey");
+    }
     for (let j = 2; j < 88; j += 12) {
-        let bFlat = document.getElementById(numRows + 2 + "-" + j);
+        let bFlat = document.getElementById("bottom-" + j);
         bFlat.classList.add("bFlat");
     }
     for (let j = 5; j < 88; j += 12) {
-        let bFlat = document.getElementById(numRows + 2 + "-" + j);
+        let bFlat = document.getElementById("bottom-" + j);
         bFlat.classList.add("cSharp");
     }
     for (let j = 7; j < 88; j += 12) {
-        let bFlat = document.getElementById(numRows + 2 + "-" + j);
+        let bFlat = document.getElementById("bottom-" + j);
         bFlat.classList.add("dSharp");
     }
     for (let j = 10; j < 88; j += 12) {
-        let bFlat = document.getElementById(numRows + 2 + "-" + j);
+        let bFlat = document.getElementById("bottom-" + j);
         bFlat.classList.add("fSharp");
     }
 }
@@ -174,9 +174,10 @@ function updateGridPreview(elem) {
     });
     [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount] = variables.map(Number);
     unitsPerRow /= 10;
+    document.documentElement.style.setProperty('--row', unitsPerRow+"px");
     gridPreview.innerHTML = createGridPreview();
     unitsPerRowSlider.max = Math.round(1000 / rowsPerBeat / beatsPerMeasure / measureCount);
-    delay = 60000 / tempo / rowsPerBeat;
+    setDelay();
     numRows = rowsPerBeat * measureCount * beatsPerMeasure;
     updatePreviewTicks();
 }
@@ -244,8 +245,7 @@ function note(i, j, color) {
     let output = `<td
         id="${i}-${j}"
         class='${color}'
-        onmouseover="hover(${i},${j})"
-        style="height:${unitsPerRow}px">
+        onmouseover="hover(${i},${j})">
         </td>`
     return output;
 }
