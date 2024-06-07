@@ -5,7 +5,7 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Controls
 -Place/select notes with click\
--Change note duration by right clicking on note\
+-Change note duration by right clicking on a note\
 -Move notes by dragging or using arrow keys on selected note\
 -Play/pause with spacebar
 
@@ -26,4 +26,4 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 -Repeat is functional but laggy\
 -Notes will eat other notes when moved with arrow keys\
 -Beat/measure marker lines are bugged at 1 row per beat\
--Selecting the last row of a beat with half of a note in it will hover the entire beat
+-Notes placed below other notes will glitch out

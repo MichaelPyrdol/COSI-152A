@@ -3,14 +3,9 @@ function prepareAudio() {
     if (isSafari) {
         alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. We apologize for the inconvenience. Please try another browser.<br><br>-Michael");
     } else {
-        audioBox = document.getElementById("audioBox");
-        let output = "";
         for (let i = 1; i <= 88; i++) {
-            output += "<audio id='note_" + i + "' src='sfx/" + i + ".ogg'></audio>"
-        }
-        audioBox.innerHTML = output;
-        for (let i = 1; i <= 88; i++) {
-            keyAudio[i] = document.getElementById("note_" + i);
+            keyAudio[i] = new Audio(`sfx/${i}.ogg`);
+            keyAudio[i].preload="auto";
             keyAudio[i].volume = 0.2;
         }
     }
@@ -44,7 +39,7 @@ function generateGrid() {
     }
     gridAnimation();
 }
-function gridAnimation(){
+function gridAnimation() {
     grid.addEventListener("click", processClick);
     grid.addEventListener("mousedown", drag);
     grid.addEventListener("mouseleave", unhover);
@@ -69,16 +64,16 @@ function preparePiano() {
     piano.addEventListener("mouseleave", refreshKeys);
     for (let i = 1; i <= numRows + 2; i++) {
         for (let j = 3; j < 88; j += 12) {
-            let whiteLeftTop = document.getElementById(i + "-" + j);
-            whiteLeftTop.classList.add("whiteLeft");
-            let whiteLeftBottom = document.getElementById(i + "-" + j);
-            whiteLeftBottom.classList.add("whiteLeft");
+            let wLeftTop = document.getElementById(i + "-" + j);
+            wLeftTop.classList.add("wLeft");
+            let wLeftBottom = document.getElementById(i + "-" + j);
+            wLeftBottom.classList.add("wLeft");
         }
         for (let j = 8; j < 88; j += 12) {
-            let whiteLeftTop = document.getElementById(i + "-" + j);
-            whiteLeftTop.classList.add("whiteLeft");
-            let whiteLeftBottom = document.getElementById(i + "-" + j);
-            whiteLeftBottom.classList.add("whiteLeft");
+            let wLeftTop = document.getElementById(i + "-" + j);
+            wLeftTop.classList.add("wLeft");
+            let wLeftBottom = document.getElementById(i + "-" + j);
+            wLeftBottom.classList.add("wLeft");
         }
     }
     for (let j = 1; j <= 88; j++) {
@@ -117,14 +112,14 @@ function showTitleScreen() {
         bottomKey.classList.add("bottomKey");
     }
     for (let i = -2; i <= -1; i++) {
-        let whiteLeftTop = document.getElementById(i + "-" + 5);
-        whiteLeftTop.classList.add("whiteLeft");
-        let whiteLeftBottom = document.getElementById(i + "-" + 5);
-        whiteLeftBottom.classList.add("whiteLeft");
-        let whiteLeftTop2 = document.getElementById(i + "-" + 12);
-        whiteLeftTop2.classList.add("whiteLeft");
-        let whiteLeftBottom2 = document.getElementById(i + "-" + 12);
-        whiteLeftBottom2.classList.add("whiteLeft");
+        let wLeftTop = document.getElementById(i + "-" + 5);
+        wLeftTop.classList.add("wLeft");
+        let wLeftBottom = document.getElementById(i + "-" + 5);
+        wLeftBottom.classList.add("wLeft");
+        let wLeftTop2 = document.getElementById(i + "-" + 12);
+        wLeftTop2.classList.add("wLeft");
+        let wLeftBottom2 = document.getElementById(i + "-" + 12);
+        wLeftBottom2.classList.add("wLeft");
     }
     let bFlat = document.getElementById(-2 + "-" + 11);
     bFlat.classList.add("bFlat");
@@ -174,7 +169,8 @@ function updateGridPreview(elem) {
     });
     [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount] = variables.map(Number);
     unitsPerRow /= 10;
-    document.documentElement.style.setProperty('--row', unitsPerRow+"px");
+    document.documentElement.style.setProperty('--row', unitsPerRow + "px");
+    defaultNoteDuration = rowsPerBeat;
     gridPreview.innerHTML = createGridPreview();
     unitsPerRowSlider.max = Math.round(1000 / rowsPerBeat / beatsPerMeasure / measureCount);
     setDelay();
@@ -197,10 +193,10 @@ function updatePreviewTicks() {
     for (let i = -2 - rowsPerBeat * beatsPerMeasure * measureCount; i < -2; i++) {
         if (i % 2 == 0) {
             let row = document.getElementById(i + "-" + 1);
-            row.classList.add("whiteNote");
+            row.classList.add("wNote");
         } else {
             let row = document.getElementById(i + "-" + 1);
-            row.classList.add("blackNote");
+            row.classList.add("bNote");
         }
     }
 }
@@ -215,30 +211,30 @@ function createPianoPreview() {
 }
 function create88(i) {
     let output = "";
-    output += note(i, 1, "white");
-    output += note(i, 2, "black");
-    output += note(i, 3, "white");
+    output += note(i, 1, "w");
+    output += note(i, 2, "b");
+    output += note(i, 3, "w");
     for (let j = 0; j < 7; j++) {
         output += octave(i, j * 12 + 3);
     }
-    output += note(i, 88, "white");
+    output += note(i, 88, "w");
     output += `</tr>`;
     return output;
 }
 function octave(i, j) {
     let output = "";
-    output += note(i, j + 1, "white");
-    output += note(i, j + 2, "black");
-    output += note(i, j + 3, "white");
-    output += note(i, j + 4, "black");
-    output += note(i, j + 5, "white");
-    output += note(i, j + 6, "white");
-    output += note(i, j + 7, "black");
-    output += note(i, j + 8, "white");
-    output += note(i, j + 9, "black");
-    output += note(i, j + 10, "white");
-    output += note(i, j + 11, "black");
-    output += note(i, j + 12, "white");
+    output += note(i, j + 1, "w");
+    output += note(i, j + 2, "b");
+    output += note(i, j + 3, "w");
+    output += note(i, j + 4, "b");
+    output += note(i, j + 5, "w");
+    output += note(i, j + 6, "w");
+    output += note(i, j + 7, "b");
+    output += note(i, j + 8, "w");
+    output += note(i, j + 9, "b");
+    output += note(i, j + 10, "w");
+    output += note(i, j + 11, "b");
+    output += note(i, j + 12, "w");
     return output;
 }
 function note(i, j, color) {

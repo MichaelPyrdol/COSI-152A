@@ -23,93 +23,77 @@ function playPause() {
             });
         }
         for (let i = numRows; i >= 0; i--) {
-            let play = setTimeout(function () {
-                refreshKeys();
-                notes.forEach((note, noteIndex) => {
-                    let parentID = note[0].dataset.parent;
-                    let newNoteArray = [];
-                    let lastRow = "";
-                    let min = numRows;
-                    note.forEach(cell => {
-                        row = parseInt(cell.id.split("-")[0]);
-                        if (row < min) {
-                            min = row;
-                        }
-                    })
-                    note.forEach(cell => {
-                        row = parseInt(cell.id.split("-")[0]);
-                        if (row == min) {
-                            lastRow = cell;
-                        } else {
-                            newNoteArray.push(cell);
-                        }
-                    })
-                    if (lastRow) {
-                        lastRow.removeAttribute("data-parent");
-                        lastRow.classList.remove("note");
-                    }
-                    let parentRow = parseInt(parentID.split("-")[0]);
-                    let parentCol = parseInt(parentID.split("-")[1]);
-                    if (parentRow + 1 < numRows + 1) {
-                        let newCell = document.getElementById(parentRow + 1 + "-" + parentCol);
-                        if (newCell) {
-                            newCell.classList.add("note");
-                            newNoteArray.push(newCell);
-                        }
-                    }
-                    newNoteArray.forEach(cell => {
-                        cell.dataset.parent = parentRow + 1 + "-" + parentCol;
-                    });
-                    note.forEach(cell => {
-                        let col = parseInt(cell.id.split("-")[1]);
-                        // Note sound
-                        if (cell.id === parentID && parentID.split("-")[0] == numRows) {
-                            playSound(col, note.length);
-                        }
-                        // Piano display
-                        if (cell.id.split("-")[0] == numRows) {
-                            let key = document.getElementById("top-" + cell.id.split("-")[1]);
-                            playKey(key);
-                        }
-                    });
-                    if (newNoteArray.length > 0) {
-                        notes[noteIndex] = newNoteArray;
-                    } else {
-                        notes[noteIndex] = null;
-                    }
-                })
-                notes = notes.filter(note => note != null);
-                // Measure marker movement
-                markerRows.forEach(cell => {
-                    let row = parseInt(cell.id.split("-")[0]);
-                    let col = parseInt(cell.id.split("-")[1]);
-                    row++;
-                    if (row < numRows + 2) {
-                        let newCell = document.getElementById(row + "-" + col);
-                        if (newCell) {
-                            newCell.classList.add("markerContainer");
-                            cell.classList.remove("markerContainer");
-                            markerRows = markerRows.filter(element => element !== cell);
-                            markerRows.push(newCell);
-                        }
-                    } else {
-                        markerRows = markerRows.filter(element => element !== cell);
-                    }
-                });
-                if (i == 0) {
-                    refreshKeys();
-                    if (repeating) {
-                        restart();
-                    } else {
-                        stop();
-                        return;
-                    }
-                }
-            }, delay * (numRows - i), i);
-            timeouts.push(play);
+            let timeout = setTimeout(playStep, delay * (numRows - i), i);
+            timeouts.push(timeout);
         }
     } else {
         stop();
+    }
+}
+function playStep(i) {
+    refreshKeys();
+    notes.forEach((note, noteIndex) => {
+        let parentID = note[0].dataset.parent;
+        let parentRow = parseInt(parentID.split("-")[0]);
+        let parentCol = parseInt(parentID.split("-")[1]);
+        let newNoteArray = [];
+        let noteLength = note.length;
+        let lastRow = note[noteLength - 1];
+        lastRow.removeAttribute("data-parent");
+        lastRow.classList.remove("note");
+        if (parentRow + 1 < numRows + 1) {
+            let newCell = document.getElementById(parentRow + 1 + "-" + parentCol);
+            if (newCell) {
+                newCell.classList.add("note");
+                newCell.dataset.parent = parentRow + 1 + "-" + parentCol;
+                newNoteArray.push(newCell);
+            }
+        }
+        for (let i = 0; i < noteLength - 1; i++) {
+            note[i].dataset.parent = parentRow + 1 + "-" + parentCol;
+            newNoteArray.push(note[i]);
+        }
+        note.forEach(cell => {
+            let col = parseInt(cell.id.split("-")[1]);
+            // Note sound
+            if (cell.id == parentID && parentID.split("-")[0] == numRows) {
+                playSound(col, note.length);
+            }
+            // Piano display
+            if (cell.id.split("-")[0] == numRows) {
+                let key = document.getElementById("top-" + cell.id.split("-")[1]);
+                playKey(key);
+            }
+        });
+        if (newNoteArray.length > 0) {
+            notes[noteIndex] = newNoteArray;
+        } else {
+            notes[noteIndex] = null;
+        }
+    })
+    notes = notes.filter(note => note != null);
+    // Measure marker movement
+    let newMarkerRows = [];
+    markerRows.forEach(cell => {
+        let row = parseInt(cell.id.split("-")[0]) + 1;
+        let col = parseInt(cell.id.split("-")[1]);
+        if (row < numRows + 2) {
+            let newCell = document.getElementById(row + "-" + col);
+            if (newCell) {
+                newCell.classList.add("markerContainer");
+                cell.classList.remove("markerContainer");
+                newMarkerRows.push(newCell);
+            }
+        }
+        markerRows = newMarkerRows;
+    });
+    if (i == 0) {
+        refreshKeys();
+        if (repeating) {
+            restart();
+        } else {
+            stop();
+        }
     }
 }
 function stop() {

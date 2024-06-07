@@ -2,34 +2,33 @@
     cursor: pointer;
 }
 
-.white {
-    background: var(--whiteKey);
+.w {
+    background: var(--wKey);
 }
 
-.black {
-    background: var(--blackKey);
+.b {
+    background: var(--bKey);
 }
 
 .hover {
     background: lightgreen !important;
 }
 
-/* Replace with note.white */
-[data-parent].white,
-.whiteNote {
-    background: var(--whiteNote);
+[data-parent].w,
+.wNote {
+    background: var(--wNote);
 }
 
-[data-parent].black,
-.blackNote {
-    background: var(--blackNote);
+[data-parent].b,
+.bNote {
+    background: var(--bNote);
 }
 
-.selected.white {
+.selected.w {
     background: var(--header);
 }
 
-.selected.black {
+.selected.b {
     background: var(--header);
 }
 

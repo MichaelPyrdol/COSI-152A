@@ -1,13 +1,13 @@
 function playSound(key, noteDuration) {
-    let deloy = 200;
+    let audioDelay = 200;
     if (noteDuration != undefined) {
         let unitDuration = 60000 / (tempo * rowsPerBeat * 2);
-        deloy = noteDuration * unitDuration * 2;
+        audioDelay = noteDuration * unitDuration * 2;
     }
     keyAudio[key].play();
     setTimeout(() => {
         keyAudio[key].currentTime = keyAudio[key].duration;
-    }, deloy);
+    }, audioDelay);
 }
 function changeTempo(elem) {
     let tempoSlider = document.getElementById("tempoSlider");
@@ -137,7 +137,7 @@ fileInput.addEventListener('change', (event) => {
 const contextMenu = document.getElementById('custom-context-menu');
 
 function showContextMenu(event) {
-    if (fromBeginning) {
+    if (fromBeginning && hoverRows!="") {
         if (hoverRows[0].classList.contains("note")) {
             deselect();
             contextMenuShow = true;

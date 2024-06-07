@@ -1,13 +1,13 @@
 function playKey(key) {
     activeKeys.push(key);
-    if (key.classList.contains("black")) {
-        key.classList.add("blackKeyPlay");
+    if (key.classList.contains("b")) {
+        key.classList.add("bKeyPlay");
     } else {
-        key.classList.add("whiteKeyPlay");
+        key.classList.add("wKeyPlay");
         whichKey = parseInt(key.id.split("-")[1]);
         bottomKey = document.getElementById("bottom-" + whichKey);
         activeKeys.push(bottomKey);
-        bottomKey.classList.add("whiteKeyPlay");
+        bottomKey.classList.add("wKeyPlay");
         switch (whichKey % 12) {
             case 1: // A
                 twoKeys(whichKey, "gPlay2", "aPlay", "bPlay");
@@ -37,7 +37,7 @@ function oneKey(whichKey, key1name, key2name) {
     if (key != undefined) {
         if (key.classList.contains(key1name)) {
             key.classList.remove(key1name);
-            key.classList.add("whiteKeyPlay");
+            key.classList.add("wKeyPlay");
         } else {
             key.classList.add(key2name);
             activeKeys.push(key);
@@ -50,7 +50,7 @@ function twoKeys(whichKey, key1name, key2name, key3name) {
     if (key1 != undefined) {
         if (key1.classList.contains(key1name)) {
             key1.classList.remove(key1name);
-            key1.classList.add("whiteKeyPlay");
+            key1.classList.add("wKeyPlay");
         } else {
             key1.classList.add(key2name + 1);
             activeKeys.push(key1);
@@ -58,7 +58,7 @@ function twoKeys(whichKey, key1name, key2name, key3name) {
     }
     if (key2.classList.contains(key3name)) {
         key2.classList.remove(key3name);
-        key2.classList.add("whiteKeyPlay");
+        key2.classList.add("wKeyPlay");
     } else {
         key2.classList.add(key2name + 2);
         activeKeys.push(key2);
@@ -66,7 +66,7 @@ function twoKeys(whichKey, key1name, key2name, key3name) {
 }
 function refreshKeys() {
     activeKeys.forEach(key => {
-        keyClasses = ["blackKeyPlay", "whiteKeyPlay", "cPlay", "dPlay1", "dPlay2", "ePlay", "fPlay", "gPlay1", "gPlay2", "aPlay1", "aPlay2", "bPlay"]
+        keyClasses = ["bKeyPlay", "wKeyPlay", "cPlay", "dPlay1", "dPlay2", "ePlay", "fPlay", "gPlay1", "gPlay2", "aPlay1", "aPlay2", "bPlay"]
         keyClasses.forEach(classy => {
             key.classList.remove(classy);
         });

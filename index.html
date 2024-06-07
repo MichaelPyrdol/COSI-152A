@@ -14,7 +14,7 @@
   <div id="custom-context-menu">
     <div class="menu-row">
       <ul>
-        <li id="menu-item-4" onclick="changeNoteDuration(4)">1</li>
+        <li id="context-1" onclick="changeNoteDuration(4)">1</li>
         <li id="menu-item-4" onclick="changeNoteDuration(2)">1/2</li>
         <li id="menu-item-4" onclick="changeNoteDuration(1)">1/4</li>
         <li id="menu-item-4" onclick="changeNoteDuration(.5)">1/8</li>
@@ -23,22 +23,31 @@
         <li id="menu-item-1" onclick="changeNoteDuration(.0625)">1/64</li>
       </ul>
       <!-- <ul>
-        <li id="menu-item-1">pp</li>
-        <li id="menu-item-2">p</li>
-        <li id="menu-item-3">mp</li>
-        <li id="menu-item-4">mf</li>
-        <li id="menu-item-4">f</li>
-        <li id="menu-item-4">ff</li>
-        <li id="menu-item-4">fff</li>
+        <li id="menu-item-4" onclick="changeDefaultNoteDuration(4)">1</li>
+        <li id="menu-item-4" onclick="changeDefaultNoteDuration(2)">1/2</li>
+        <li id="menu-item-4" onclick="changeDefaultNoteDuration(1)">1/4</li>
+        <li id="menu-item-4" onclick="changeDefaultNoteDuration(.5)">1/8</li>
+        <li id="menu-item-3" onclick="changeDefaultNoteDuration(.25)">1/16</li>
+        <li id="menu-item-2" onclick="changeDefaultNoteDuration(.125)">1/32</li>
+        <li id="menu-item-1" onclick="changeDefaultNoteDuration(.0625)">1/64</li>
       </ul> -->
     </div>
   </div>
   <header>
     <a href="https://michaelpyrdol.github.io/opti-midi/" id="titles" href="#">
-      <div id="opti-midi">Opti-MIDI v1.0.0</div>
+      <div id="opti-midi">Opti-MIDI</div>
       <div id="michael-pyrdol">by Michael Pyrdol 2024</div>
     </a>
     <div id="controls" style="display:none">
+      <select id="defaultNoteDuration" class="custom-button" onchange="defaultNoteDuration=parseInt(this.value*rowsPerBeat);">
+        <option value="4">1</option>
+        <option value="2">1/2</option>
+        <option value="1" selected>1/4</option>
+        <option value=".5">1/8</option>
+        <option value=".25">1/16</option>
+        <option value=".125">1/32</option>
+        <option value=".0625">1/64</option>
+      </select>
       <div id="restart" class="custom-button square" onclick="restart()"><img src="images/restart.png"></div>
       <div id="play" class="custom-button square" onclick="playPause()"><img src="images/play.png"></div>
       <div id="reset" class="custom-button square" onclick="reset()"><img src="images/stop.png"></div>
@@ -117,7 +126,6 @@
       <table id="pianoPreview" cellspacing="0"></table>
     </div>
   </div>
-  <div id="audioBox"></div>
   <footer>
   </footer>
   <script src="variables.js"></script>

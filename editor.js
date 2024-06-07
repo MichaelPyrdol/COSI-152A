@@ -26,40 +26,15 @@ function hover(i, j) {
                 } else {
                     if (row.dataset.parent == undefined) {
                         // Hovering over empty space — confined to the number of rows per beat
-                        let emptyBeat = true;
-                        let scout = row;
-                        let m = k;
-                        while (emptyBeat && m > 1 && !scout.classList.contains("beatTick")) {
-                            m--;
-                            scout = document.getElementById(m + "-" + j);
-                            if (scout.classList.contains("note")) {
-                                emptyBeat = false;
-                            }
-                        }
-                        while (emptyBeat && k < numRows && !row.classList.contains("beatTick")) {
+                        while (k < numRows && !row.classList.contains("beatTick")) {
                             k++;
                             row = document.getElementById(k + "-" + j);
-                            if (row.classList.contains("note")) {
-                                emptyBeat = false;
-                            }
                         }
                         let l = k;
-                        // Debug start
-                        if (emptyBeat) {
-                            if (event.shiftKey && l - rowsPerBeat >= 0) {
-                                while (k > l - rowsPerBeat / 2) {
-                                    hoverRows.push(row);
-                                    k--;
-                                    row = document.getElementById(k + "-" + j);
-                                }
-                                // Debug end
-                            } else {
-                                while (k > l - rowsPerBeat) {
-                                    hoverRows.push(row);
-                                    k--;
-                                    row = document.getElementById(k + "-" + j);
-                                }
-                            }
+                        while (k > l - defaultNoteDuration && k > 0 && !row.classList.contains("note")) {
+                            hoverRows.push(row);
+                            k--;
+                            row = document.getElementById(k + "-" + j);
                         }
                     } else {
                         // Hovering over a note
@@ -82,7 +57,7 @@ function hover(i, j) {
             key = document.getElementById("top-" + j);
             highlightKey(key);
             if (i == numRows + 2) {
-                if (key.classList.contains("white")) {
+                if (key.classList.contains("w")) {
                     highlightKey(key);
                 } else {
                     refreshKeys();
@@ -170,7 +145,6 @@ function stopDrag() {
 }
 function changeNoteDuration(duration) {
     selectRows = [];
-    selectedNoteDuration = duration;
     let row = hoverRows[0];
     removeNote(hoverRows);
     // Unhover
@@ -224,7 +198,6 @@ document.addEventListener('keydown', function (event) {
                         let newSpot = document.getElementById(row - selectedNoteDuration + "-" + col);
                         newSpot.classList.add("note");
                         newSpot.classList.add("selected");
-                        theNote.push(newSpot);
                         selectRows.push(newSpot);
                         selectRows.forEach(cell => {
                             cell.dataset.parent = row - 1 + "-" + col;

@@ -37,3 +37,5 @@ let repeating = false;
 let selectedNoteDuration = 0;
 
 let contextMenuShow = false;
+
+let defaultNoteDuration = rowsPerBeat;
