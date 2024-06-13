@@ -30,8 +30,10 @@ let markerSnapshot = [];
 
 let activeKeys = [];
 
-let mouseDown = false;
+let dragging = false;
+let drawing = false;
 
+let drawMode = false;
 let repeating = false;
 
 let selectedNoteDuration = 0;
@@ -39,3 +41,5 @@ let selectedNoteDuration = 0;
 let contextMenuShow = false;
 
 let defaultNoteDuration = rowsPerBeat;
+
+let smooth = false;

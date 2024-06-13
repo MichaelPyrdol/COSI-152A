@@ -1,14 +1,111 @@
+function showTitleScreen() {
+    prepareAudio();
+    gridPreview.innerHTML = createGridPreview();
+    pianoPreview.innerHTML = createPianoPreview();
+    for (let j = 1; j <= 12; j++) {
+        let topKey = document.getElementById(-1 + "-" + j);
+        topKey.classList.add("topKey");
+        let bottomKey = document.getElementById(-2 + "-" + j);
+        bottomKey.classList.add("bottomKey");
+    }
+    for (let i = -2; i <= -1; i++) {
+        let wLeftTop = document.getElementById(i + "-" + 5);
+        wLeftTop.classList.add("wLeft");
+        let wLeftBottom = document.getElementById(i + "-" + 5);
+        wLeftBottom.classList.add("wLeft");
+        let wLeftTop2 = document.getElementById(i + "-" + 12);
+        wLeftTop2.classList.add("wLeft");
+        let wLeftBottom2 = document.getElementById(i + "-" + 12);
+        wLeftBottom2.classList.add("wLeft");
+    }
+    let bFlat = document.getElementById(-2 + "-" + 11);
+    bFlat.classList.add("bFlat");
+    let cSharp = document.getElementById(-2 + "-" + 2);
+    cSharp.classList.add("cSharp");
+    let dSharp = document.getElementById(-2 + "-" + 4);
+    dSharp.classList.add("dSharp");
+    let fSharp = document.getElementById(-2 + "-" + 7);
+    fSharp.classList.add("fSharp");
+    updatePreviewTicks();
+}
 function prepareAudio() {
     var isSafari = window.safari !== undefined;
     if (isSafari) {
-        alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. We apologize for the inconvenience. Please try another browser.<br><br>-Michael");
+        alert("Opti-MIDI is not compatible with Safari due to audio playback restrictions. We apologize for the inconvenience. Please try another browser. -Michael");
     } else {
         for (let i = 1; i <= 88; i++) {
             keyAudio[i] = new Audio(`sfx/${i}.ogg`);
-            keyAudio[i].preload="auto";
+            keyAudio[i].preload = "auto";
             keyAudio[i].volume = 0.2;
         }
     }
+}
+function createGridPreview() {
+    let output = "";
+    for (let i = 0; i < rowsPerBeat * beatsPerMeasure * measureCount; i++) {
+        output += `<tr>`;
+        output += octave(-3 - i, 0);
+        output += `</tr>`;
+    }
+    return output;
+}
+function updateGridPreview(elem) {
+    const variables = [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount];
+    const variableNames = ["unitsPerRow", "rowsPerBeat", "beatsPerMeasure", "measureCount"];
+    variableNames.forEach((name, index) => {
+        const box = document.getElementById(name + "Box");
+        const slider = document.getElementById(name + "Slider");
+        if (elem === "slider") {
+            variables[index] = slider.value;
+            box.value = slider.value;
+        } else {
+            variables[index] = box.value;
+            slider.value = box.value;
+        }
+    });
+    [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount] = variables.map(Number);
+    unitsPerRow /= 10;
+    document.documentElement.style.setProperty('--row', unitsPerRow + "px");
+    defaultNoteDuration = rowsPerBeat;
+    wholeNote = document.getElementById("wholeNote");
+    wholeNote.value = beatsPerMeasure;
+    gridPreview.innerHTML = createGridPreview();
+    unitsPerRowSlider.max = Math.round(1200 / rowsPerBeat / beatsPerMeasure / measureCount);
+    setDelay();
+    numRows = rowsPerBeat * measureCount * beatsPerMeasure;
+    updatePreviewTicks();
+}
+function updatePreviewTicks() {
+    for (let i = -2 - rowsPerBeat; i > -2 - rowsPerBeat * beatsPerMeasure * measureCount; i -= rowsPerBeat) {
+        for (let j = 1; j <= 12; j++) {
+            let beat = document.getElementById(i + "-" + j);
+            beat.classList.add("beatTick");
+        }
+    }
+    for (let i = -2 - rowsPerBeat * beatsPerMeasure * measureCount; i < -2; i += rowsPerBeat * beatsPerMeasure) {
+        for (let j = 1; j <= 12; j++) {
+            let beat = document.getElementById(i + "-" + j);
+            beat.classList.add("measureTick");
+        }
+    }
+    for (let i = -2 - rowsPerBeat * beatsPerMeasure * measureCount; i < -2; i++) {
+        let row = document.getElementById(i + "-" + 1);
+        row.classList.add("note");
+        if (i % 2 == 0) {
+            row.classList.add("w");
+        } else {
+            row.classList.add("b");
+        }
+    }
+}
+function createPianoPreview() {
+    let output = "";
+    output += `<tr>`;
+    output += octave(-1, 0);
+    output += `</tr><tr>`;
+    output += octave(-2, 0);
+    output += `</tr>`;
+    return output;
 }
 function generateGrid() {
     grid.innerHTML = createGrid();
@@ -40,11 +137,6 @@ function generateGrid() {
     gridAnimation();
 }
 function gridAnimation() {
-    grid.addEventListener("click", processClick);
-    grid.addEventListener("mousedown", drag);
-    grid.addEventListener("mouseleave", unhover);
-    piano.addEventListener("click", playSelected);
-
     // Piano intro animation
     let del = 1600 / rowsPerBeat / beatsPerMeasure / measureCount;
     let rows = grid.getElementsByTagName("tr");
@@ -54,6 +146,13 @@ function gridAnimation() {
         }, del * i);
     }
     preparePiano();
+    addHoverEvents();
+    grid.addEventListener("click", processClick);
+    grid.addEventListener("mousedown", drag);
+    document.addEventListener("mouseup", stopDrag);
+    grid.addEventListener("mouseleave", unhover);
+    piano.addEventListener("click", playSelected);
+
     controls.removeAttribute("style");
     let titleScreeny = document.getElementById("titleScreen");
     titleScreeny.remove();
@@ -101,36 +200,6 @@ function preparePiano() {
         bFlat.classList.add("fSharp");
     }
 }
-function showTitleScreen() {
-    prepareAudio();
-    gridPreview.innerHTML = createGridPreview();
-    pianoPreview.innerHTML = createPianoPreview();
-    for (let j = 1; j <= 12; j++) {
-        let topKey = document.getElementById(-1 + "-" + j);
-        topKey.classList.add("topKey");
-        let bottomKey = document.getElementById(-2 + "-" + j);
-        bottomKey.classList.add("bottomKey");
-    }
-    for (let i = -2; i <= -1; i++) {
-        let wLeftTop = document.getElementById(i + "-" + 5);
-        wLeftTop.classList.add("wLeft");
-        let wLeftBottom = document.getElementById(i + "-" + 5);
-        wLeftBottom.classList.add("wLeft");
-        let wLeftTop2 = document.getElementById(i + "-" + 12);
-        wLeftTop2.classList.add("wLeft");
-        let wLeftBottom2 = document.getElementById(i + "-" + 12);
-        wLeftBottom2.classList.add("wLeft");
-    }
-    let bFlat = document.getElementById(-2 + "-" + 11);
-    bFlat.classList.add("bFlat");
-    let cSharp = document.getElementById(-2 + "-" + 2);
-    cSharp.classList.add("cSharp");
-    let dSharp = document.getElementById(-2 + "-" + 4);
-    dSharp.classList.add("dSharp");
-    let fSharp = document.getElementById(-2 + "-" + 7);
-    fSharp.classList.add("fSharp");
-    updatePreviewTicks();
-}
 function createGrid() {
     let output = "";
     for (let i = 1; i <= numRows; i++) {
@@ -142,71 +211,6 @@ function createPiano() {
     let output = "";
     output += "<tr>" + create88(numRows + 1) + "</tr>";
     output += "<tr>" + create88(numRows + 2) + "</tr>";
-    return output;
-}
-function createGridPreview() {
-    let output = "";
-    for (let i = 0; i < rowsPerBeat * beatsPerMeasure * measureCount; i++) {
-        output += `<tr>`;
-        output += octave(-3 - i, 0);
-        output += `</tr>`;
-    }
-    return output;
-}
-function updateGridPreview(elem) {
-    const variables = [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount];
-    const variableNames = ["unitsPerRow", "rowsPerBeat", "beatsPerMeasure", "measureCount"];
-    variableNames.forEach((name, index) => {
-        const box = document.getElementById(name + "Box");
-        const slider = document.getElementById(name + "Slider");
-        if (elem === "slider") {
-            variables[index] = slider.value;
-            box.value = slider.value;
-        } else {
-            variables[index] = box.value;
-            slider.value = box.value;
-        }
-    });
-    [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount] = variables.map(Number);
-    unitsPerRow /= 10;
-    document.documentElement.style.setProperty('--row', unitsPerRow + "px");
-    defaultNoteDuration = rowsPerBeat;
-    gridPreview.innerHTML = createGridPreview();
-    unitsPerRowSlider.max = Math.round(1000 / rowsPerBeat / beatsPerMeasure / measureCount);
-    setDelay();
-    numRows = rowsPerBeat * measureCount * beatsPerMeasure;
-    updatePreviewTicks();
-}
-function updatePreviewTicks() {
-    for (let i = -2 - rowsPerBeat; i > -2 - rowsPerBeat * beatsPerMeasure * measureCount; i -= rowsPerBeat) {
-        for (let j = 1; j <= 12; j++) {
-            let beat = document.getElementById(i + "-" + j);
-            beat.classList.add("beatTick");
-        }
-    }
-    for (let i = -2 - rowsPerBeat * beatsPerMeasure * measureCount; i < -2; i += rowsPerBeat * beatsPerMeasure) {
-        for (let j = 1; j <= 12; j++) {
-            let beat = document.getElementById(i + "-" + j);
-            beat.classList.add("measureTick");
-        }
-    }
-    for (let i = -2 - rowsPerBeat * beatsPerMeasure * measureCount; i < -2; i++) {
-        if (i % 2 == 0) {
-            let row = document.getElementById(i + "-" + 1);
-            row.classList.add("wNote");
-        } else {
-            let row = document.getElementById(i + "-" + 1);
-            row.classList.add("bNote");
-        }
-    }
-}
-function createPianoPreview() {
-    let output = "";
-    output += `<tr>`;
-    output += octave(-1, 0);
-    output += `</tr><tr>`;
-    output += octave(-2, 0);
-    output += `</tr>`;
     return output;
 }
 function create88(i) {
@@ -238,10 +242,20 @@ function octave(i, j) {
     return output;
 }
 function note(i, j, color) {
-    let output = `<td
-        id="${i}-${j}"
-        class='${color}'
-        onmouseover="hover(${i},${j})">
-        </td>`
+    let output = `<td id="${i}-${j}" class='${color}'</td>`
     return output;
+}
+function addHoverEvents() {
+    for (let j = 1; j <= 88; j++) {
+        for (let i = 1; i <= numRows; i++) {
+            let cell = document.getElementById(i + "-" + j);
+            cell.addEventListener("mouseover", hover);
+        }
+        for (let i = 0; i <= 1; i++) {
+            let topKey = document.getElementById("top-" + j);
+            let bottomKey = document.getElementById("bottom-" + j);
+            topKey.addEventListener("mouseover", hoverKey);
+            bottomKey.addEventListener("mouseover", hoverKey);
+        }
+    }
 }

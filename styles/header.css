@@ -29,8 +29,8 @@ header {
     align-items: center;
     position: absolute;
     justify-content: center;
-    margin-left: 43%;
-    height:50px;
+    margin-left: 35%;
+    height: 50px;
 }
 
 .custom-button {
@@ -67,6 +67,12 @@ input[type="text"] {
 .custom-button img {
     position: relative;
     object-fit: cover;
+}
+
+#draw img {
+    bottom: 4px;
+    width: 25px;
+    right: 3px;
 }
 
 #restart img {
@@ -106,19 +112,22 @@ input[type="text"] {
     font-size: 20px;
     text-align: center;
 }
-#tempoDiv{
+
+#tempoDiv {
     flex-direction: column;
     align-items: center;
-    width:130px;
-}
-#tempoDiv p{
-    margin:0;
-}
-#tempoSlider{
-    margin:0;
+    width: 130px;
 }
 
-#defaultNoteDuration{
-    height:25px;
-    padding:0;
+#tempoDiv p {
+    margin: 0;
+}
+
+#tempoSlider {
+    margin: 0;
+}
+
+#defaultNoteDuration {
+    height: 25px;
+    padding: 0;
 }

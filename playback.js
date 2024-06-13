@@ -11,6 +11,7 @@ function playPause() {
             invisible();
             unhover();
             deselect();
+            noteSort();
             noteSnapshot = [];
             parentSnapshot = [];
             notes.forEach(note => {
@@ -22,9 +23,35 @@ function playPause() {
                 markerSnapshot.push(row);
             });
         }
-        for (let i = numRows; i >= 0; i--) {
-            let timeout = setTimeout(playStep, delay * (numRows - i), i);
-            timeouts.push(timeout);
+        if (smooth) {
+            let startTime;
+            let lastTime = 0;
+            let currentIndex = 0;
+            function animateSteps(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+
+                // Update currentIndex based on the delay
+                if (elapsed - lastTime >= delay) {
+                    lastTime = elapsed;
+                    currentIndex++;
+                    if (currentIndex <= numRows) {
+                        playStep(currentIndex);
+                    }
+                }
+
+                // Continue the animation until all steps are played
+                if (currentIndex <= numRows) {
+                    const timeout = requestAnimationFrame(animateSteps);
+                    timeouts.push(timeout);
+                }
+            }
+            requestAnimationFrame(animateSteps);
+        } else {
+            for (let i = numRows; i >= 0; i--) {
+                let timeout = setTimeout(playStep, delay * (numRows - i), i);
+                timeouts.push(timeout);
+            }
         }
     } else {
         stop();
@@ -33,7 +60,8 @@ function playPause() {
 function playStep(i) {
     refreshKeys();
     notes.forEach((note, noteIndex) => {
-        let parentID = note[0].dataset.parent;
+        // Note movement
+        let parentID = note[0].id;
         let parentRow = parseInt(parentID.split("-")[0]);
         let parentCol = parseInt(parentID.split("-")[1]);
         let newNoteArray = [];
@@ -41,7 +69,7 @@ function playStep(i) {
         let lastRow = note[noteLength - 1];
         lastRow.removeAttribute("data-parent");
         lastRow.classList.remove("note");
-        if (parentRow + 1 < numRows + 1) {
+        if (parentRow + 1 < numRows + 1) { // If new parent
             let newCell = document.getElementById(parentRow + 1 + "-" + parentCol);
             if (newCell) {
                 newCell.classList.add("note");
@@ -50,13 +78,15 @@ function playStep(i) {
             }
         }
         for (let i = 0; i < noteLength - 1; i++) {
-            note[i].dataset.parent = parentRow + 1 + "-" + parentCol;
             newNoteArray.push(note[i]);
         }
         note.forEach(cell => {
-            let col = parseInt(cell.id.split("-")[1]);
             // Note sound
-            if (cell.id == parentID && parentID.split("-")[0] == numRows) {
+            if (cell.id.split("-")[0] == numRows && !cell.classList.contains("active")) {
+                note.forEach(cell2=>{
+                    cell2.classList.add("active");
+                })
+                let col = parseInt(cell.id.split("-")[1]);
                 playSound(col, note.length);
             }
             // Piano display
@@ -85,8 +115,8 @@ function playStep(i) {
                 newMarkerRows.push(newCell);
             }
         }
-        markerRows = newMarkerRows;
     });
+    markerRows = newMarkerRows;
     if (i == 0) {
         refreshKeys();
         if (repeating) {
@@ -99,7 +129,11 @@ function playStep(i) {
 function stop() {
     paused = true;
     play.innerHTML = "<img src='images/play.png'>"
-    timeouts.forEach(timeout => clearTimeout(timeout));
+    if (smooth) {
+        timeouts.forEach(timeout => cancelAnimationFrame(timeout));
+    } else {
+        timeouts.forEach(timeout => clearTimeout(timeout));
+    }
     timeouts = [];
 }
 function reset() {
@@ -108,6 +142,7 @@ function reset() {
         stop();
         visible();
         refreshKeys();
+        addHoverEvents();
         notes.forEach(note => {
             note.forEach(row => {
                 row.removeAttribute("data-parent");
@@ -149,11 +184,21 @@ function repeat() {
         repeating = true;
     }
 }
+function draw() {
+    let draw = document.getElementById("draw");
+    draw.classList.toggle("pressed");
+    if (drawMode) {
+        drawMode = false;
+    } else {
+        drawMode = true;
+    }
+}
 function invisible() {
     for (let i = 1; i <= numRows; i++) {
         for (let j = 1; j <= 88; j++) {
             cell = document.getElementById(i + "-" + j);
             cell.classList.add("off");
+            cell.removeEventListener("mouseover", hover);
         }
     }
 }
@@ -162,6 +207,7 @@ function visible() {
         for (let j = 1; j <= 88; j++) {
             cell = document.getElementById(i + "-" + j);
             cell.classList.remove("off");
+            cell.classList.remove("active");
         }
     }
 }

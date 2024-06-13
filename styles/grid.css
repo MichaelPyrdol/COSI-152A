@@ -3,25 +3,23 @@
 }
 
 .w {
-    background: var(--wKey);
+    background: var(--wGrid);
 }
 
 .b {
-    background: var(--bKey);
+    background: var(--bGrid);
+}
+
+.note.w {
+    background: var(--wNote);
+}
+
+.note.b {
+    background: var(--bNote);
 }
 
 .hover {
     background: lightgreen !important;
-}
-
-[data-parent].w,
-.wNote {
-    background: var(--wNote);
-}
-
-[data-parent].b,
-.bNote {
-    background: var(--bNote);
 }
 
 .selected.w {

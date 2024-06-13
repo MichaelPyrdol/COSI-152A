@@ -7,6 +7,7 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 -Place/select notes with click\
 -Change note duration by right clicking on a note\
 -Move notes by dragging or using arrow keys on selected note\
+-Hold shift for precision while placing or dragging notes\
 -Play/pause with spacebar
 
 ## Supported features
@@ -16,7 +17,8 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 -Playback (restart, play, reset, repeat)\
 -Tempo adjust\
 -Clear all notes\
--Saving and loading arrangements
+-Saving and loading arrangements\
+-Draw mode
 
 ## Planned features
 -Selecting and moving multiple notes\
@@ -24,6 +26,4 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Known bugs
 -Repeat is functional but laggy\
--Notes will eat other notes when moved with arrow keys\
--Beat/measure marker lines are bugged at 1 row per beat\
--Notes placed below other notes will glitch out
+-Beat/measure marker lines are bugged at 1 row per beat

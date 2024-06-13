@@ -1,7 +1,7 @@
 :root {
     --background: rgb(6, 18, 28);
-    --wKey: rgb(49, 49, 49);
-    --bKey: rgb(37, 37, 37);
+    --wGrid: rgb(49, 49, 49);
+    --bGrid: rgb(37, 37, 37);
     --wNote: limegreen;
     --bNote: darkgreen;
     --wKeyPlay: limegreen;
@@ -103,6 +103,6 @@ td {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--wKey);
+    background: var(--wGrid);
     /* Color of the scrollbar handle on hover */
 }

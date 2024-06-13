@@ -39,8 +39,9 @@
       <div id="michael-pyrdol">by Michael Pyrdol 2024</div>
     </a>
     <div id="controls" style="display:none">
+      <div id="draw" class="custom-button square" onclick="draw()"><img src="images/draw.png"></div>
       <select id="defaultNoteDuration" class="custom-button" onchange="defaultNoteDuration=parseInt(this.value*rowsPerBeat);">
-        <option value="4">1</option>
+        <option id="wholeNote" value="4">1</option>
         <option value="2">1/2</option>
         <option value="1" selected>1/4</option>
         <option value=".5">1/8</option>
@@ -81,7 +82,7 @@
         </tr>
         <tr>
           <td colspan="2"><input id="unitsPerRowSlider" type="range" oninput="updateGridPreview('slider')" value="3"
-              min="1" max="4" </input></td>
+              min="1" max="4"></td>
         </tr>
         <tr>
           <td><input id="rowsPerBeatBox" type="text" value="16" onchange="updateGridPreview('box')"></td>
@@ -89,7 +90,7 @@
         </tr>
         <tr>
           <td colspan="2"><input id="rowsPerBeatSlider" type="range" oninput="updateGridPreview('slider')" value="16"
-              min="2" max="32" step="2" </input></td>
+              min="2" max="32" step="2"></td>
         </tr>
         <tr>
           <td><input id="beatsPerMeasureBox" type="text" value="4" onchange="updateGridPreview('box')"></td>
@@ -97,7 +98,7 @@
         </tr>
         <tr>
           <td colspan="2"><input id="beatsPerMeasureSlider" type="range" oninput="updateGridPreview('slider')" value="4"
-              min="1" max="12" </input></td>
+              min="1" max="12"></td>
         </tr>
         <tr>
           <td><input id="measureCountBox" type="text" value="4" onchange="updateGridPreview('box')"></td>
@@ -105,7 +106,7 @@
         </tr>
         <tr>
           <td colspan="2"><input id="measureCountSlider" type="range" oninput="updateGridPreview('slider')" value="4"
-              min="1" max="12" </input></td>
+              min="1" max="12"></td>
         </tr>
         <tr>
           <td id="generatePart" colspan="2">
@@ -133,6 +134,7 @@
   <script src="scripts.js"></script>
   <script src="keys.js"></script>
   <script src="editor.js"></script>
+  <script src="keydown.js"></script>
   <script src="playback.js"></script>
   <script src="main.js"></script>
 </body>

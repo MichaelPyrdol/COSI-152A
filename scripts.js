@@ -39,6 +39,7 @@ function clearNotes() {
     noteSnapshot = [];
     notes = [];
     deselect();
+    refreshKeys();
 }
 function downloadFile(content) {
     const blob = new Blob([content], { type: 'text/plain' });
@@ -82,7 +83,7 @@ function load() {
     beatsPerMeasure = parseInt(splitFile[2].split("beatsPerMeasure:")[1]);
     measureCount = parseInt(splitFile[3].split("measureCount:")[1]);
     tempo = parseInt(splitFile[4].split("tempo:")[1]);
-    document.documentElement.style.setProperty('--row', unitsPerRow+"px");
+    document.documentElement.style.setProperty('--row', unitsPerRow + "px");
     tempoBox.value = tempo;
     tempoSlider.value = tempo;
     setDelay();
@@ -105,7 +106,7 @@ function load() {
     })
     let rows = grid.getElementsByTagName("tr");
     for (let i = 0; i < numRows; i++) {
-        rows[i].setAttribute("style","display:none");
+        rows[i].setAttribute("style", "display:none");
     }
     gridAnimation();
 }
@@ -137,7 +138,7 @@ fileInput.addEventListener('change', (event) => {
 const contextMenu = document.getElementById('custom-context-menu');
 
 function showContextMenu(event) {
-    if (fromBeginning && hoverRows!="") {
+    if (fromBeginning && hoverRows != "") {
         if (hoverRows[0].classList.contains("note")) {
             deselect();
             contextMenuShow = true;
