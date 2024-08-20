@@ -22,7 +22,8 @@ No external libraries or plugins were used. Just raw HTML, CSS, and JS!
 
 ## Planned features
 -Selecting and moving multiple notes\
--Copy and paste
+-Copy and paste\
+-Confine note durations, e.g. certain settings shouldn't have 1/16 notes
 
 ## Known bugs
 -Repeat is functional but laggy\

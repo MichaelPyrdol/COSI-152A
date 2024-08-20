@@ -66,6 +66,7 @@ function updateGridPreview(elem) {
     [unitsPerRow, rowsPerBeat, beatsPerMeasure, measureCount] = variables.map(Number);
     unitsPerRow /= 10;
     document.documentElement.style.setProperty('--row', unitsPerRow + "px");
+    defaultOffset = rowsPerBeat;
     defaultNoteDuration = rowsPerBeat;
     wholeNote = document.getElementById("wholeNote");
     wholeNote.value = beatsPerMeasure;
@@ -134,9 +135,6 @@ function generateGrid() {
         markerRows.push(beat);
         beat.classList.add("markerContainer");
     }
-    gridAnimation();
-}
-function gridAnimation() {
     // Piano intro animation
     let del = 1600 / rowsPerBeat / beatsPerMeasure / measureCount;
     let rows = grid.getElementsByTagName("tr");
@@ -152,6 +150,19 @@ function gridAnimation() {
     document.addEventListener("mouseup", stopDrag);
     grid.addEventListener("mouseleave", unhover);
     piano.addEventListener("click", playSelected);
+
+    defaultOffsets = document.getElementById("defaultOffset");
+    for (let i = defaultOffsets.options.length - 1; i >= 0; i--) {
+        if (parseFloat(defaultOffsets.options[i].value) < 1 / defaultOffset) {
+            defaultOffsets.remove(defaultOffsets.options.length - 1);
+        }
+    }
+    defaultNoteDurations = document.getElementById("defaultNoteDuration");
+    for (let i = defaultNoteDurations.options.length - 1; i >= 0; i--) {
+        if (parseFloat(defaultNoteDurations.options[i].value) < 1 / defaultNoteDuration) {
+            defaultNoteDurations.remove(defaultNoteDurations.options.length - 1);
+        }
+    }
 
     controls.removeAttribute("style");
     let titleScreeny = document.getElementById("titleScreen");

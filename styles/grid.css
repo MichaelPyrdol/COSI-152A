@@ -30,9 +30,18 @@
     background: var(--header);
 }
 
+.note.hover{
+    background: green !important;
+}
+
 .selected.hover {
     background: blue !important;
 }
+
+/* Debug */
+/* .active {
+    background: red !important;
+} */
 
 .beatTick {
     position: relative;

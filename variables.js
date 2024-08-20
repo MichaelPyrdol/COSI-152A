@@ -34,12 +34,15 @@ let dragging = false;
 let drawing = false;
 
 let drawMode = false;
+let eraseMode = false;
 let repeating = false;
 
 let selectedNoteDuration = 0;
 
 let contextMenuShow = false;
 
+let defaultOffset = rowsPerBeat;
 let defaultNoteDuration = rowsPerBeat;
 
+// Debug
 let smooth = false;

@@ -40,15 +40,31 @@
     </a>
     <div id="controls" style="display:none">
       <div id="draw" class="custom-button square" onclick="draw()"><img src="images/draw.png"></div>
-      <select id="defaultNoteDuration" class="custom-button" onchange="defaultNoteDuration=parseInt(this.value*rowsPerBeat);">
-        <option id="wholeNote" value="4">1</option>
-        <option value="2">1/2</option>
-        <option value="1" selected>1/4</option>
-        <option value=".5">1/8</option>
-        <option value=".25">1/16</option>
-        <option value=".125">1/32</option>
-        <option value=".0625">1/64</option>
-      </select>
+      <div id="erase" class="custom-button square" onclick="erase()"><img src="images/erase.png"></div>
+      <div id="offsetDiv">
+        <p>Offset</p>
+        <select id="defaultOffset" class="custom-button dropdown"
+          onchange="defaultOffset=parseInt(this.value*rowsPerBeat);">
+          <option value="1" selected>1/4</option>
+          <option value=".5">1/8</option>
+          <option value=".25">1/16</option>
+          <option value=".125">1/32</option>
+          <option value=".0625">1/64</option>
+        </select>
+      </div>
+      <div id="noteDiv">
+        <p>Note</p>
+        <select id="defaultNoteDuration" class="custom-button dropdown"
+          onchange="defaultNoteDuration=parseInt(this.value*rowsPerBeat);">
+          <option id="wholeNote" value="4">1</option>
+          <option value="2">1/2</option>
+          <option value="1" selected>1/4</option>
+          <option value=".5">1/8</option>
+          <option value=".25">1/16</option>
+          <option value=".125">1/32</option>
+          <option value=".0625">1/64</option>
+        </select>
+      </div>
       <div id="restart" class="custom-button square" onclick="restart()"><img src="images/restart.png"></div>
       <div id="play" class="custom-button square" onclick="playPause()"><img src="images/play.png"></div>
       <div id="reset" class="custom-button square" onclick="reset()"><img src="images/stop.png"></div>
@@ -90,7 +106,7 @@
         </tr>
         <tr>
           <td colspan="2"><input id="rowsPerBeatSlider" type="range" oninput="updateGridPreview('slider')" value="16"
-              min="2" max="32" step="2"></td>
+              min="2" max="16" step="2"></td>
         </tr>
         <tr>
           <td><input id="beatsPerMeasureBox" type="text" value="4" onchange="updateGridPreview('box')"></td>

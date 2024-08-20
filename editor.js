@@ -33,6 +33,11 @@ function hover(event) {
                         row = document.getElementById(k + "-" + j);
                     }
                 }
+                // Offset
+                if(defaultOffset != rowsPerBeat && k - i >= defaultOffset){
+                    k -= rowsPerBeat-Math.ceil(i%rowsPerBeat/defaultOffset)*defaultOffset;
+                    row = document.getElementById(k + "-" + j);
+                }
                 let l = k;
                 while (k > l - defaultNoteDuration && k > 0 && !row.classList.contains("note")) {
                     hoverRows.push(row);
@@ -53,6 +58,9 @@ function hover(event) {
                         selectedNoteDuration = note.length;
                     }
                 })
+                if (eraseMode && erasing) {
+                    removeNote(hoverRows);
+                }
             }
         }
         hoverRows.forEach(row1 => {
@@ -103,13 +111,15 @@ function processClick() {
         // Deselecting previous note
         deselect();
         // Placing a note
-        if (hoverRows[0].classList.contains("note")) {
-            select();
+        if (eraseMode) {
+            removeNote(hoverRows);
         } else {
-            placeNote();
+            if (!hoverRows[0].classList.contains("note")) {
+                placeNote();
+            }
             select();
+            playSound(selectedColumn);
         }
-        playSound(selectedColumn);
     }
 }
 function placeNote() {
@@ -145,12 +155,16 @@ function removeNote(whichRows) {
 }
 function drag() {
     if (hoverRows != "") {
-        if (event.button == "0" && hoverRows[0].classList.contains("note")) {
+        if (event.button == "0" && hoverRows[0].classList.contains("note") && !eraseMode) {
             dragging = true;
             removeNote(hoverRows);
             deselect();
         } else if (drawMode) {
             drawing = true;
+        } else if (eraseMode) {
+            removeNote(hoverRows);
+            deselect();
+            erasing = true;
         }
     }
 }
@@ -163,6 +177,31 @@ function stopDrag() {
         }
     }
     drawing = false;
+    erasing = false;
+}
+function draw() {
+    let draw = document.getElementById("draw");
+    draw.classList.toggle("pressed");
+    if (drawMode) {
+        drawMode = false;
+    } else {
+        drawMode = true;
+        let erase = document.getElementById("erase");
+        erase.classList.remove("pressed");
+        eraseMode = false;
+    }
+}
+function erase() {
+    let erase = document.getElementById("erase");
+    erase.classList.toggle("pressed");
+    if (eraseMode) {
+        eraseMode = false;
+    } else {
+        eraseMode = true;
+        let draw = document.getElementById("draw");
+        draw.classList.remove("pressed");
+        drawMode = false;
+    }
 }
 function changeNoteDuration(duration) {
     selectRows = [];

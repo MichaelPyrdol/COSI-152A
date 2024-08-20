@@ -69,6 +69,7 @@ function playStep(i) {
         let lastRow = note[noteLength - 1];
         lastRow.removeAttribute("data-parent");
         lastRow.classList.remove("note");
+        lastRow.classList.remove("active");
         if (parentRow + 1 < numRows + 1) { // If new parent
             let newCell = document.getElementById(parentRow + 1 + "-" + parentCol);
             if (newCell) {
@@ -80,21 +81,23 @@ function playStep(i) {
         for (let i = 0; i < noteLength - 1; i++) {
             newNoteArray.push(note[i]);
         }
-        note.forEach(cell => {
-            // Note sound
-            if (cell.id.split("-")[0] == numRows && !cell.classList.contains("active")) {
-                note.forEach(cell2=>{
-                    cell2.classList.add("active");
-                })
-                let col = parseInt(cell.id.split("-")[1]);
-                playSound(col, note.length);
-            }
-            // Piano display
-            if (cell.id.split("-")[0] == numRows) {
-                let key = document.getElementById("top-" + cell.id.split("-")[1]);
-                playKey(key);
-            }
-        });
+        if(newNoteArray.length>0){
+            newNoteArray.forEach(cell => {
+                // Note sound
+                if (cell.id.split("-")[0] == numRows && !cell.classList.contains("active")) {
+                    newNoteArray.forEach(cell2=>{
+                        cell2.classList.add("active");
+                    })
+                    let col = parseInt(cell.id.split("-")[1]);
+                    playSound(col, note.length);
+                }
+                // Piano display
+                if (cell.id.split("-")[0] == numRows) {
+                    let key = document.getElementById("top-" + cell.id.split("-")[1]);
+                    playKey(key);
+                }
+            });
+        }
         if (newNoteArray.length > 0) {
             notes[noteIndex] = newNoteArray;
         } else {
@@ -182,15 +185,6 @@ function repeat() {
         repeating = false;
     } else {
         repeating = true;
-    }
-}
-function draw() {
-    let draw = document.getElementById("draw");
-    draw.classList.toggle("pressed");
-    if (drawMode) {
-        drawMode = false;
-    } else {
-        drawMode = true;
     }
 }
 function invisible() {

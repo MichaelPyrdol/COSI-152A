@@ -1,7 +1,7 @@
 function playSound(key, noteDuration) {
     let audioDelay = 200;
     if (noteDuration != undefined) {
-        let unitDuration = 60000 / (tempo * rowsPerBeat * 2);
+        let unitDuration = 60000 / (tempo * rowsPerBeat * 2.1);
         audioDelay = noteDuration * unitDuration * 2;
     }
     keyAudio[key].play();
